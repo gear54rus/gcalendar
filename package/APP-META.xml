@@ -1,89 +1,97 @@
 <application version="2.0" xmlns="http://aps-standard.org/ns/2">
-    <id>http://aps.google.com/calendar</id>
+    <id>http://aps.google.com/gcalendar</id>
     <name>GCalendar</name>
     <version>1.0</version>
     <release>0</release>
     <homepage>https://github.com/gear54rus/gcalendar</homepage>
     <vendor>
-    	<name>Google</name>
-    	<homepage>http://google.com/</homepage>
-    	<icon path="images/google.png"/>
+        <name>Google</name>
+        <homepage>http://google.com/</homepage>
+        <icon path="images/google.png"/>
     </vendor>
-  	<packager>
-           <name>APS team</name>
-    	   <homepage>http://dev.apsstandard.org/</homepage>
-    	   <icon path="images/apsteam.png"/>
-    	   <uri>http://dev.apsstandard.org/</uri>
-        </packager>
+    <packager>
+        <name>APS team</name>
+        <homepage>http://dev.apsstandard.org/</homepage>
+        <icon path="images/apsteam.png"/>
+        <uri>http://dev.apsstandard.org/</uri>
+    </packager>
     <presentation>
-    	<summary>Application for scheduling events on Google Calendar</summary>
-    	<description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they scheduled.</description>
+        <summary>Application for scheduling events on Google Calendar</summary>
+        <description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they scheduled.</description>
         <icon path="images/icon.png"/>
         <changelog>
-        	<version release="0" version="1.0">
-        		<entry>First release</entry>
-        	</version>
+            <version release="0" version="1.0">
+                <entry>First release</entry>
+            </version>
         </changelog>
         <categories>
-           <category>Collaboration/Calendaring</category>
-    	</categories>
+            <category>Collaboration/Calendaring</category>
+        </categories>
         <navigation id="ccp" label="VPS Management">
-        	<var name="context" type-id="http://aps-standard.org/samples/basic/context/1.0"/>
-        	<plugs-to id="http://www.aps-standard.org/ui/service"/>
-        	<item id="servers" label="Servers">
-        		<view id="servers" label="Servers">
-        			<view id="server.new-1" label="New VPS">
-        				<controls>
-        					<cancel/>
-        					<next/>
-        				</controls>
-        			</view>
-        			<view id="server.new-last" label="Review">
-        				<controls>
-        					<prev/>
-        					<finish/>
-        				</controls>
-        			</view>
-        			<view id="server.edit" label="Edit VPS">
-        				<controls>
-        					<cancel/>
-        					<submit/>
-        				</controls>
-        				<var name="vps" type-id="http://aps-standard.org/samples/basic/vps/1.0"/>
-        			</view>
-        		</view>
-        	</item>
+            <var name="context" type-id="http://aps-standard.org/samples/basic/context/1.0"/>
+            <plugs-to id="http://www.aps-standard.org/ui/service"/>
+            <item id="servers" label="Servers">
+                <view id="servers" label="Servers">
+                    <view id="server.new-1" label="New VPS">
+                        <controls>
+                            <cancel/>
+                            <next/>
+                        </controls>
+                    </view>
+                    <view id="server.new-last" label="Review">
+                        <controls>
+                            <prev/>
+                            <finish/>
+                        </controls>
+                    </view>
+                    <view id="server.edit" label="Edit VPS">
+                        <controls>
+                            <cancel/>
+                            <submit/>
+                        </controls>
+                        <var name="vps" type-id="http://aps-standard.org/samples/basic/vps/1.0"/>
+                    </view>
+                </view>
+            </item>
         </navigation>
     </presentation>
     <license-agreement must-accept="true">
-	<free/>
-	<text>
-		<name>End-User License Agreement</name>
-		<file>http://opensource.org/licenses/bsd-license</file>
-	</text>
+        <free/>
+        <text>
+            <name>End-User License Agreement</name>
+            <file>http://opensource.org/licenses/bsd-license</file>
+        </text>
     </license-agreement>
-    <service id="clouds">
-		<schema path="schemas/clouds.schema.gen"/>
-<code engine="php" path="scripts/clouds.php"/>
-		<presentation>
-			<name>VPS cloud globals</name>
-			<summary>VPS cloud application global service</summary>
-		</presentation>
+    <service id="globals">
+        <schema path="schemas/globals.schema.gen"/>
+        <code engine="php" path="scripts/globals.php"/>
+        <presentation>
+            <name>Global settings</name>
+            <summary>Global settings for GCalendar</summary>
+        </presentation>
     </service>
-    <service id="contexts">
-		<schema path="schemas/contexts.schema.gen"/>
-<code engine="php" path="scripts/contexts.php"/>
-		<presentation>
-			<name>VPS Management</name>
-			<summary>VPS management environment</summary>
-		</presentation>
+    <service id="context">
+        <schema path="schemas/context.schema.gen"/>
+        <code engine="php" path="scripts/context.php"/>
+        <presentation>
+            <name>Context</name>
+            <summary>GCalendar calendars context</summary>
+        </presentation>
     </service>
-    <service id="vpses">
-    	<schema path="schemas/vpses.schema.gen"/>
-<code engine="php" path="scripts/vpses.php"/>
-    	<presentation>
-    		<name>Virtual Private Server</name>
-    		<summary>Cloud virtual private server</summary>
-    	</presentation>
+    <service id="calendar">
+        <schema path="schemas/calendar.schema.gen"/>
+        <code engine="php" path="scripts/calendar.php"/>
+        <presentation>
+            <name>Calendar</name>
+            <summary>GCalendar calendar</summary>
+        </presentation>
+    </service>
+    <service id="event">
+        <schema path="schemas/event.schema.gen"/>
+        <code engine="php" path="scripts/event.php"/>
+        <presentation>
+            <name>Event</name>
+            <summary>Event scheduled on GCalendar calendar</summary>
+        </presentation>
     </service>
 </application>
