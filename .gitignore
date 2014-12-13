@@ -1,3 +1,4 @@
 *.app.zip
 *.schema.gen
 package/APP-LIST.xml
+package/log

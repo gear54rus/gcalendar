@@ -28,7 +28,7 @@
             <category>Collaboration/Calendaring</category>
         </categories>
         <navigation id="ccp" label="VPS Management">
-            <var name="context" type-id="http://aps-standard.org/samples/basic/context/1.0"/>
+            <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0"/>
             <plugs-to id="http://www.aps-standard.org/ui/service"/>
             <item id="servers" label="Servers">
                 <view id="servers" label="Servers">
@@ -49,7 +49,7 @@
                             <cancel/>
                             <submit/>
                         </controls>
-                        <var name="vps" type-id="http://aps-standard.org/samples/basic/vps/1.0"/>
+                        <var name="vps" type-id="http://aps.google.com/gcalendar/event/1.0"/>
                     </view>
                 </view>
             </item>
