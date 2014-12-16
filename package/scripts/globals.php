@@ -14,7 +14,6 @@ class globals extends \APS\ResourceBase {
      * @pattern("^[0-9]+-[a-z0-9]+@developer.gserviceaccount.com$")
      * @required
      * @headline
-     * @final
      */
     public $serviceAccountName;
 
@@ -24,14 +23,13 @@ class globals extends \APS\ResourceBase {
      * @description("Base64 representation of .p12 private key")
      * @pattern("^[a-zA-Z0-9+\/]+={0,2}$")
      * @required 
-     * @final
      */
     public $privateKey;
 
     /**
      * @link("http://aps.google.com/gcalendar/context/1.0[]")
      */
-     public $contexts;
+    public $contexts;
 
     public function provision() {
         $l = \APS\Logger::get();
@@ -42,7 +40,7 @@ class globals extends \APS\ResourceBase {
         $l = \APS\Logger::get();
         $l->debug('Unprovisioning...');
     }
-    public function clearAccount() {
+    private function clearAccount() {
         $s = getServices($this)['calendar'];
         $l = \APS\Logger::get();
         $calendarList = $s->calendarList->listCalendarList(['maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id']);
