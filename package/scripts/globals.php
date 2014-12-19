@@ -22,7 +22,7 @@ class globals extends \APS\ResourceBase {
      * @title("Private Key")
      * @description("Base64 representation of .p12 private key")
      * @pattern("^[a-zA-Z0-9+\/]+={0,2}$")
-     * @required 
+     * @required
      */
     public $privateKey;
 
@@ -33,17 +33,40 @@ class globals extends \APS\ResourceBase {
 
     public function provision() {
         $l = \APS\Logger::get();
-        $l->debug('Provisioning...');
+        $l->debug('Provisioning globals...');
+        $code = file_put_contents($this->serviceAccountName, $this->privateKey);
+        if ($code === false) {
+            throw new Exception('Unable to store private key. Exit code: '.$code);
+        }
+        $this->privateKey = 'PRIVATE+KEY+HIDDEN';
         $this->clearAccount();
     }
+
+    public function configure($new = null) {
+        $l = \APS\Logger::get();
+        $l->debug('Configuring globals...');
+        if (file_exists($this->serviceAccountName))
+            unlink($this->serviceAccountName);
+        $this->serviceAccountName = $new->serviceAccountName;
+        $this->privateKey = $new->privateKey;
+        $code = file_put_contents($this->serviceAccountName, $this->privateKey);
+        if ($code === false) {
+            throw new Exception('Unable to store private key. Exit code: '.$code);
+        }
+        $this->privateKey = 'PRIVATE+KEY+HIDDEN';
+    }
+
     public function unprovision() {
         $l = \APS\Logger::get();
-        $l->debug('Unprovisioning...');
+        $l->debug('Unprovisioning globals...');
+        $this->clearAccount();
+        unlink($serviceAccountName);
     }
+
     private function clearAccount() {
         $s = getServices($this)['calendar'];
         $l = \APS\Logger::get();
-        $calendarList = $s->calendarList->listCalendarList(['maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id']);
+        $calendarList = $s->calendarList->listCalendarList(array('maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id'));
         foreach ($calendarList->getItems() as $v) {
             $l->debug('Deleting '.$v->getId());
             $s->calendars->delete($v->getId());            

@@ -12,8 +12,8 @@ function getServices($globals) {
 		return $services;
 	$client = new Google_Client();
 	$client->setApplicationName("Client_Library_Examples");
-	$services = ['calendar' => new Google_Service_Calendar($client), 'mail' => new Google_Service_Gmail($client)];
-	$creds = new Google_Auth_AssertionCredentials($globals->serviceAccountName, ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/gmail.compose'], base64_decode($globals->privateKey));
+	$services = array('calendar' => new Google_Service_Calendar($client), 'mail' => new Google_Service_Gmail($client));
+	$creds = new Google_Auth_AssertionCredentials($globals->serviceAccountName, array('https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/gmail.compose'), base64_decode(file_get_contents($globals->serviceAccountName)));
 	$client->setAssertionCredentials($creds);
 	if ($client->getAuth()->isAccessTokenExpired()) {
 		$l->debug('Requesting new token...');
