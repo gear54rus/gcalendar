@@ -1,0 +1,18 @@
+{
+    "aps": {
+        "type": "http://aps.google.com/gcalendar/calendar/1.0"
+    },
+    "description": "",
+    "name": "",
+    "timezone": 0,
+    "context": {
+        "aps": {
+            "id": ""
+        }
+    },
+    "owner": {
+        "aps": {
+            "id": ""
+        }
+    }
+}

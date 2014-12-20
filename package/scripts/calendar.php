@@ -7,6 +7,28 @@ require 'util.php';
  * @implements("http://aps-standard.org/types/core/resource/1.0")
  */
 class calendar extends \APS\ResourceBase {
+	/**
+     * @type(string)
+     * @final
+     */
+	public $googleId;
+
+	/**
+     * @type(string)
+     * @required
+     */
+	public $name;
+
+	/**
+     * @type(string)
+     */
+	public $description;
+
+	/**
+     * @type(integer)
+     * @required
+     */
+	public $timezone;
 
 	/**
      * @link("http://aps.google.com/gcalendar/context/1.0")
@@ -26,7 +48,11 @@ class calendar extends \APS\ResourceBase {
 	public $events;
 
 	public function provision() {
-
+		$calendar = new Google_Service_Calendar_Calendar();
+		$calendar->setDescription($this->description);
+		$s = getServices()['calendar'];
+		$this->googleId = $s->calendars->insert($calendar)->getId();
+		//$calendar->
 	}	
 	public function unprovision() {
 

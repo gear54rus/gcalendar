@@ -38,7 +38,7 @@ class globals extends \APS\ResourceBase {
         if ($code === false) {
             throw new Exception('Unable to store private key. Exit code: '.$code);
         }
-        $this->privateKey = 'PRIVATE+KEY+HIDDEN';
+        $this->privateKey = 'HIDDEN';
         $this->clearAccount();
     }
 
@@ -53,7 +53,7 @@ class globals extends \APS\ResourceBase {
         if ($code === false) {
             throw new Exception('Unable to store private key. Exit code: '.$code);
         }
-        $this->privateKey = 'PRIVATE+KEY+HIDDEN';
+        $this->privateKey = 'HIDDEN';
     }
 
     public function unprovision() {
