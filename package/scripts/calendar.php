@@ -25,7 +25,7 @@ class calendar extends \APS\ResourceBase {
 	public $description;
 
 	/**
-     * @type(integer)
+     * @type(string)
      * @required
      */
 	public $timezone;

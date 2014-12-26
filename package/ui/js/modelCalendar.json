@@ -4,7 +4,7 @@
     },
     "description": "",
     "name": "",
-    "timezone": 0,
+    "timezone": "",
     "context": {
         "aps": {
             "id": ""
