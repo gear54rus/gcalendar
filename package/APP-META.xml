@@ -16,7 +16,7 @@
         <uri>http://dev.apsstandard.org/</uri>
     </packager>
     <presentation>
-        <summary>GCalendar - Application for scheduling events on Google Calendar</summary>
+        <summary>GCalendar - application for scheduling events on Google Calendar</summary>
         <description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they have scheduled.</description>
         <icon path="images/icon.png" />
         <changelog>
@@ -31,19 +31,17 @@
             <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/service" />
             <item id="calendars" label="Calendars">
-                <view id="calendars" label="Calendar list">
-                    <view id="calendar.new" />
-                    <view id="calendar.view" />
-                    <view id="calendar.edit" />
+                <view id="calendars" label="Calendar list" />
+                <view id="calendar.new0" label="New calendar" />
+                <view id="calendar.new1" label="Review" />
+                <view id="calendar.view" label="{target.name} overview">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                </view>
+                <view id="calendar.edit" label="Edit {target.name}">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
                 </view>
             </item>
-            <item id="events" label="Events">
-                <view id="events" label="Event list">
-                    <view id="event.new" />
-                    <view id="event.view" />
-                    <view id="event.edit" />
-                </view>
-            </item>
+            <item id="events" label="Events" />
         </navigation>
         <navigation id="suwizard">
             <view id="suwizard.new" label="Add new calendar for Service User">
@@ -57,13 +55,6 @@
             </view>
         </navigation>
         <navigation id="mycp" label="GCalendar">
-            <item id="user.events" label="My Events">
-                <view id="user.events" label="Event list">
-                    <view id="user.event.new" />
-                    <view id="user.event.view" />
-                    <view id="user.event.edit" />
-                </view>
-            </item>
         </navigation>
     </presentation>
     <license-agreement must-accept="true">

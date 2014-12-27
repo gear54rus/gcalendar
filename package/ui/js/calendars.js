@@ -1,7 +1,7 @@
 require(['aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], function(Store, registry, load) {
     var store = new Store({
         apsType: 'http://aps.google.com/gcalendar/calendar/1.0',
-        target: '/aps/2/resources'
+        target: '/aps/2/resources/'
     });
     load(['aps/PageContainer', {
             id: 'page-container'
@@ -11,8 +11,12 @@ require(['aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], funct
                     id: 'grid',
                     store: store,
                     selectionMode: "multiple",
-                    apsResourceViewId: "calendar.edit",
-                    columns: [{}]
+                    apsResourceViewId: "calendar.new",
+                    columns: [{
+                        field: 'name',
+                        name: 'Name',
+                        type: "resourceName"
+                    }]
                 },
                 [
                     ['aps/Toolbar', {},

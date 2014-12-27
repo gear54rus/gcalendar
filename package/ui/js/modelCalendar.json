@@ -5,11 +5,6 @@
     "description": "",
     "name": "",
     "timezone": "",
-    "context": {
-        "aps": {
-            "id": ""
-        }
-    },
     "owner": {
         "aps": {
             "id": ""
