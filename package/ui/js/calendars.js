@@ -1,7 +1,6 @@
 require(['aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], function(Store, registry, load) {
     var store = new Store({
-        apsType: 'http://aps.google.com/gcalendar/calendar/1.0',
-        target: '/aps/2/resources/'
+        target: '/aps/2/resources/' + aps.context.vars.context.aps.id + '/calendars'
     });
     load(['aps/PageContainer', {
             id: 'page-container'
@@ -39,6 +38,5 @@ require(['aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], funct
             ]
         ]
     ]).then(function() {
-
     });
 });

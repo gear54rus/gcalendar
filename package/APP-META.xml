@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://aps-standard.org/ns/2" version="2.0">
     <id>http://aps.google.com/gcalendar</id>
     <name>GCalendar</name>
@@ -31,14 +32,30 @@
             <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/service" />
             <item id="calendars" label="Calendars">
-                <view id="calendars" label="Calendar list" />
-                <view id="calendar.new0" label="New calendar" />
-                <view id="calendar.new1" label="Review" />
-                <view id="calendar.view" label="{target.name} overview">
-                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                <view id="calendars" label="Calendar list">
+                    <view id="calendar.view" label="{target.name} overview">
+                        <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                    </view>
+                    <view id="calendar.edit" label="Edit {target.name}">
+                        <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                        <controls>
+                            <cancel />
+                            <submit label="Save" />
+                        </controls>
+                    </view>
                 </view>
-                <view id="calendar.edit" label="Edit {target.name}">
-                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                <view id="calendar.new0" label="New calendar">
+                    <controls>
+                        <cancel />
+                        <next />
+                    </controls>
+                    <view id="calendar.new1" label="Review">
+                        <controls>
+                            <cancel />
+                            <prev />
+                            <submit label="Create" />
+                        </controls>
+                    </view>
                 </view>
             </item>
             <item id="events" label="Events" />
@@ -54,8 +71,7 @@
                 <plugs-to id="http://www.aps-standard.org/ui/service/suservice.view" />
             </view>
         </navigation>
-        <navigation id="mycp" label="GCalendar">
-        </navigation>
+        <navigation id="mycp" label="GCalendar" />
     </presentation>
     <license-agreement must-accept="true">
         <free />

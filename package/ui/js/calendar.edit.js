@@ -1,6 +1,11 @@
-require(['dojo/text!./js/timezoneList.json', 'dojo/text!./js/modelCalendar.json', 'js/moment.js', 'dojox/mvc/getStateful', 'dojox/mvc/getPlainValue', 'dojox/mvc/at', 'dijit/registry', 'aps/load', 'aps/ready!', ], function(tzList, modelCalendar, moment, getStateful, getPlainValue, at, registry, load) {
-    var suwizard = (mode === 'suwizard.new'),
-        dt = moment(),
+require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/at', 'aps/load', 'dijit/registry'], function(meta, moment, tzList, at, load, registry) {
+    meta.check({
+        'suwizard.new': [
+            ['dojo/text!./js/modelCalendar.json', 'dojox/mvc/getStateful', 'dojox/mvc/getPlainValue'],
+            suwizardNew
+        ]
+    });
+    var dt = moment(),
         tmp = [];
     tzList = JSON.parse(tzList);
     tzList.forEach(function(v) {
@@ -10,10 +15,6 @@ require(['dojo/text!./js/timezoneList.json', 'dojo/text!./js/modelCalendar.json'
         });
     });
     tzList = tmp;
-    var model = JSON.parse(modelCalendar),
-        user = getStateful(aps.context.params.user);
-    model.name = user.displayName + '\'s calendar';
-    model.timezone = tzList[0].value;
     var layout = ['aps/PageContainer', {
             id: 'pageContainer'
         },
@@ -27,7 +28,6 @@ require(['dojo/text!./js/timezoneList.json', 'dojo/text!./js/modelCalendar.json'
                         id: 'tb-name',
                         label: 'Name',
                         placeholder: 'Name the calendar',
-                        value: at(model, 'name'),
                         size: 40,
                         required: true
                     }],
@@ -35,37 +35,49 @@ require(['dojo/text!./js/timezoneList.json', 'dojo/text!./js/modelCalendar.json'
                         id: 'ta-description',
                         label: 'Description',
                         placeholder: 'Describe the calendar',
-                        value: at(model, 'description'),
                         cols: 56,
                         rows: 10
                     }],
                     ['aps/Select', {
                         id: 'sel-timezone',
                         label: 'Timezone',
-                        value: at(model, 'timezone'),
                         options: tzList
                     }]
                 ]
             ]
         ]
     ];
-    load(layout).then(function() {
-        aps.app.onNext = function() {
-            var page = registry.byId('pageContainer');
-            page.get('messageList').removeAll();
-            if (!page.validate()) {
-                aps.apsc.cancelProcessing();
-                return;
-            }
-            aps.apsc.gotoView('empty', null, {
-                objects: [getPlainValue(model)],
-                userAttr: 'owner'
-            });
-        };
-        aps.app.onCancel = function() {
-            aps.apsc.gotoView('calendars');
-        };
+    meta.run();
 
-    });
+    function suwizardNew(modelCalendar, getStateful, getPlainValue) {
+        var model = JSON.parse(modelCalendar),
+            user = getStateful(aps.context.params.user);
+        model.name = user.displayName + '\'s calendar';
+        model.timezone = tzList[0].value;
+        layout[2][0][2][0][1].value = at(model, 'name');
+        layout[2][0][2][1][1].value = at(model, 'description');
+        layout[2][0][2][2][1].value = at(model, 'timezone');
+        load(layout).then(function() {
+            aps.app.onNext = function() {
+                var page = registry.byId('pageContainer');
+                page.get('messageList').removeAll();
+                if (!page.validate()) {
+                    aps.apsc.cancelProcessing();
+                    return;
+                }
+                aps.apsc.gotometa('empty', null, {
+                    objects: [getPlainValue(model)],
+                    userAttr: 'owner'
+                });
+            };
+            //dis shit don't work?:(
+            aps.app.onCancel = function() {
+                aps.apsc.gotometa('calendars');
+            };
+        });
+    }
 
+    function calendarEdit() {
+
+    }
 });
