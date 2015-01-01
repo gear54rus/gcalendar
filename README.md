@@ -1,7 +1,7 @@
 APS Calendar
 ============
 
-Proof of concept [APS](http://dev.apsstandard.org/develop/) package that connects APS2-compliant hosting platform with Google Calendar.
+Proof of concept [APS](http://doc.apsstandard.org/) package that connects APS2-compliant hosting platform with Google Calendar.
 
 To build it, you need:
 

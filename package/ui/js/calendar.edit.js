@@ -1,10 +1,11 @@
 require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/at', 'aps/load', 'dijit/registry'], function(meta, moment, tzList, at, load, registry) {
-    meta.check({
+    if(!meta.check({
         'suwizard.new': [
             ['dojo/text!./js/modelCalendar.json', 'dojox/mvc/getStateful', 'dojox/mvc/getPlainValue'],
             suwizardNew
         ]
-    });
+    }))
+        return;
     var dt = moment(),
         tmp = [];
     tzList = JSON.parse(tzList);
@@ -65,12 +66,12 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                     aps.apsc.cancelProcessing();
                     return;
                 }
-                aps.apsc.gotometa('empty', null, {
+                aps.apsc.gotoView('empty', null, {
                     objects: [getPlainValue(model)],
                     userAttr: 'owner'
                 });
             };
-            //dis shit don't work?:(
+            //dis shit don' wok?:(
             aps.app.onCancel = function() {
                 aps.apsc.gotometa('calendars');
             };

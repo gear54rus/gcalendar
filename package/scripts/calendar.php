@@ -48,14 +48,15 @@ class calendar extends \APS\ResourceBase {
 	public $events;
 
 	public function provision() {
-		$calendar = new Google_Service_Calendar_Calendar();
-		$calendar->setDescription($this->description);
-		$s = getServices()['calendar'];
-		$this->googleId = $s->calendars->insert($calendar)->getId();
-		//$calendar->
+		$c = new Google_Service_Calendar_Calendar();
+		$c->setSummary($this->name);
+		$c->setDescription($this->description);
+		$c->setTimeZone($this->timezone);
+		$s = getServices($this->context->globals)['calendar'];
+		$this->googleId = $s->calendars->insert($c)->getId();
 	}	
 	public function unprovision() {
-
+		getServices($this->context->globals)['calendar']->calendars->delete($this->googleId);
 	}
 }
 

@@ -5,11 +5,10 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
     meta.showMsg = function(err, type) {
         var errData = err.response ? JSON.parse(err.response.text) : err,
             page = registry.byId('pageContainer');
-        console.log(page);
         aps.apsc.cancelProcessing();
         if (!page) {
             page = new PageContainer({
-                id: 'page'
+                id: 'pageContainer'
             });
             page.placeAt(document.body, 'first');
         }
