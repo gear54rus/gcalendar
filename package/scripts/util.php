@@ -7,7 +7,7 @@ define('APS_DEVELOPMENT_MODE', 'on');
 
 function getService($globals) {
 	$l = \APS\Logger::get();
-	static $services = null;
+	static $service = null;
 	if ($service !== null)
 		return $service;
 	$client = new Google_Client();
