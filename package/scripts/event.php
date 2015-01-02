@@ -69,7 +69,7 @@ class event extends \APS\ResourceBase {
 
 	}	
 
-	public function configure() {
+	public function configure($new) {
 
 	}
 

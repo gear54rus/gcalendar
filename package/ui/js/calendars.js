@@ -27,7 +27,7 @@ require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/
                             }],
                             ['aps/ToolbarButton', {
                                 id: 'btn-delete',
-                                iconClass: 'sb-delete',
+                                iconClass: 'sb-app-delete',
                                 label: 'Delete',
                                 requireItems: true
                             }]
@@ -36,7 +36,9 @@ require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/
                 ]
             ]
         ]
-    ]).then(function () {
-        var grid = registry.byId('gr-calendars');
+    ]).then(function() {
+        registry.byId('btn-create').on('click', function() {
+            aps.apsc.gotoView('calendar.new0');
+        });
     });
 });

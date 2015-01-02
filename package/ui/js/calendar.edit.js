@@ -1,10 +1,14 @@
 require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/at', 'aps/load', 'dijit/registry'], function(meta, moment, tzList, at, load, registry) {
-    if(!meta.check({
-        'suwizard.new': [
-            ['dojo/text!./js/modelCalendar.json', 'dojox/mvc/getStateful', 'dojox/mvc/getPlainValue'],
-            suwizardNew
-        ]
-    }))
+    if (!meta.check({
+            'suwizard.new': [
+                ['dojo/text!./js/modelCalendar.json', 'dojox/mvc/getStateful', 'dojox/mvc/getPlainValue'],
+                suwizardNew
+            ],
+            'calendar.new0': [
+                ['dojo/text!./js/modelCalendar.json', 'dojo/text!./js/newCalendarWizard.json'],
+                calendarNew
+            ]
+        }))
         return;
     var dt = moment(),
         tmp = [];
@@ -71,11 +75,30 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                     userAttr: 'owner'
                 });
             };
-            //dis shit don' wok?:(
-            aps.app.onCancel = function() {
-                aps.apsc.gotometa('calendars');
-            };
         });
+    }
+
+    function calendarNew(modelCalendar, newCalendarWizard) {
+        layout[2] = [
+            ['aps/WizardControl', {
+                id: 'wc-wizard',
+                steps: JSON.parse(newCalendarWizard)
+            }],
+            ['aps/FieldSet', {
+                    id: 'fs-owner',
+                    title: 'Calendar owner'
+                },
+                [
+                    ['aps/Select', {
+                        id: 'sel-owner',
+                        label: 'Service User'
+                    }]
+                ]
+            ],
+            layout[2][0]
+        ];
+        load(layout);
+
     }
 
     function calendarEdit() {

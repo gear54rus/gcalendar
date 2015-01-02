@@ -11,7 +11,7 @@ class context extends \APS\ResourceBase {
     * @type(integer)
     * @required
     */
-    public $eventTTL
+    public $eventTTL;
 
     /**
      * @link("http://aps.google.com/gcalendar/globals/1.0")
@@ -30,11 +30,15 @@ class context extends \APS\ResourceBase {
      */
     public $calendars;
 
+    public function _getDefault() {
+        return array('eventTTL' => 1440);
+    }
+
     public function provision() {
 
     }   
 
-    public function configure() {
+    public function configure($new) {
 
     }
 
