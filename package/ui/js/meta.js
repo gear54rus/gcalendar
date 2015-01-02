@@ -1,6 +1,6 @@
 define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], function(registry, Message, PageContainer) {
     var meta = {},
-    	mode;
+        mode;
     meta.appId = 'http://aps.google.com/gcalendar';
     meta.showMsg = function(err, type) {
         var errData = err.response ? JSON.parse(err.response.text) : err,
@@ -31,9 +31,9 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
         }
         mode = modes[view];
         return true;
-    }
+    };
     meta.run = function() {
         require.apply(this, mode);
-    }
+    };
     return meta;
 });
