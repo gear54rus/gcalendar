@@ -86,6 +86,11 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
         });
     }
 
+
+    function calendarNew() {
+        
+    }
+
     function eventBlock(Store, target) {
         return ['aps/Container', {
                 id: 'fs-events',

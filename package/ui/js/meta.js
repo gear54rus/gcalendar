@@ -2,8 +2,8 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
     var meta = {},
         mode;
     meta.appId = 'http://aps.google.com/gcalendar';
-    meta.showMsg = function(err, type) {
-        var errData = err.response ? JSON.parse(err.response.text) : err,
+    meta.showMsg = function(data, type, closeable) {
+        var object = data.response ? JSON.parse(data.response.text) : data,
             page = registry.byId('page-container');
         aps.apsc.cancelProcessing();
         if (!page) {
@@ -14,10 +14,13 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
         }
         var messages = page.get('messageList');
         messages.removeAll();
+        console.log(closeable);
         messages.addChild(new Message({
-            description: err + (errData.message ? '<br />' + errData.message : ''),
-            type: type || 'error'
+            description: data + (object.message ? '<br />' + object.message : ''),
+            type: type || 'error',
+            closeable: closeable
         }));
+        page.startup();
     };
     meta.check = function(modes) {
         if (aps.context.view.id.indexOf(meta.appId) !== 0) {
