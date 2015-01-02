@@ -1,4 +1,5 @@
-require(['aps/ResourceStore', 'aps/load', 'aps/ready!'], function(Store, load) {
+require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/load', 'aps/ready!'], function(Store, StatefulArray, registry, load) {
+    var selectionArray = new StatefulArray();
     load(['aps/PageContainer', {
             id: 'page-container'
         },
@@ -9,7 +10,7 @@ require(['aps/ResourceStore', 'aps/load', 'aps/ready!'], function(Store, load) {
                         target: '/aps/2/resources/' + aps.context.vars.context.aps.id + '/calendars'
                     }),
                     selectionMode: 'multiple',
-                    apsResourceViewId: 'calendar.new',
+                    apsResourceViewId: 'calendar.view',
                     columns: [{
                         field: 'name',
                         name: 'Name',
@@ -21,14 +22,13 @@ require(['aps/ResourceStore', 'aps/load', 'aps/ready!'], function(Store, load) {
                         [
                             ['aps/ToolbarButton', {
                                 id: 'btn-create',
-                                iconClass: 'sb-create',
-                                label: 'Create',
-                                requireItems: true
+                                iconClass: 'sb-add-new',
+                                label: 'Create'
                             }],
                             ['aps/ToolbarButton', {
                                 id: 'btn-delete',
                                 iconClass: 'sb-delete',
-                                label: 'Remove',
+                                label: 'Delete',
                                 requireItems: true
                             }]
                         ]
@@ -36,5 +36,7 @@ require(['aps/ResourceStore', 'aps/load', 'aps/ready!'], function(Store, load) {
                 ]
             ]
         ]
-    ]);
+    ]).then(function () {
+        var grid = registry.byId('gr-calendars');
+    });
 });

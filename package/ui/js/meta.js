@@ -4,11 +4,11 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
     meta.appId = 'http://aps.google.com/gcalendar';
     meta.showMsg = function(err, type) {
         var errData = err.response ? JSON.parse(err.response.text) : err,
-            page = registry.byId('pageContainer');
+            page = registry.byId('page-container');
         aps.apsc.cancelProcessing();
         if (!page) {
             page = new PageContainer({
-                id: 'pageContainer'
+                id: 'page-container'
             });
             page.placeAt(document.body, 'first');
         }

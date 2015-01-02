@@ -7,7 +7,13 @@ require 'util.php';
  * @implements("http://aps-standard.org/types/core/resource/1.0")
  */
 class context extends \APS\ResourceBase {
-	/**
+    /**
+    * @type(integer)
+    * @required
+    */
+    public $eventTTL
+
+    /**
      * @link("http://aps.google.com/gcalendar/globals/1.0")
      * @required
      */
@@ -24,10 +30,15 @@ class context extends \APS\ResourceBase {
      */
     public $calendars;
 
-	public function provision() {
+    public function provision() {
 
-	}	
-	public function unprovision() {
+    }   
 
-	}
+    public function configure() {
+
+    }
+
+    public function unprovision() {
+
+    }
 }

@@ -42,7 +42,7 @@ class globals extends \APS\ResourceBase {
         $this->clearAccount();
     }
 
-    public function configure($new = null) {
+    public function configure($new) {
         $l = \APS\Logger::get();
         $l->debug('Configuring globals...');
         if (file_exists($this->serviceAccountName))
@@ -50,7 +50,7 @@ class globals extends \APS\ResourceBase {
         $this->serviceAccountName = $new->serviceAccountName;
         $this->privateKey = $new->privateKey;
         $code = file_put_contents($this->serviceAccountName, $this->privateKey);
-        if ($code === false) {
+        if (!$code) {
             throw new Exception('Unable to store private key. Exit code: '.$code);
         }
         $this->privateKey = 'HIDDEN';
@@ -64,7 +64,7 @@ class globals extends \APS\ResourceBase {
     }
 
     private function clearAccount() {
-        $s = getServices($this)['calendar'];
+        $s = getService($this);
         $l = \APS\Logger::get();
         $calendarList = $s->calendarList->listCalendarList(array('maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id'));
         foreach ($calendarList->getItems() as $v) {

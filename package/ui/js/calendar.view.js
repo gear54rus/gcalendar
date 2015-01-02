@@ -7,11 +7,15 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
             'suservice.view': [
                 ['aps/ResourceStore', 'dojo/promise/all'],
                 suserviceView
+            ],
+            'calendar.view': [
+                ['aps/ResourceStore'],
+                calendarView
             ]
         }))
         return;
     var layout = ['aps/PageContainer', {
-            id: 'pageContainer'
+            id: 'page-container'
         },
         [
             ['aps/FieldSet', {
@@ -46,7 +50,6 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
     }
 
     function suserviceView(Store, all) {
-        console.log(aps);
         var store = new Store({
             target: '/aps/2/resources',
             apsType: 'http://aps.google.com/gcalendar/calendar/1.0'
@@ -75,6 +78,14 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
             });
     }
 
+    function calendarView(Store) {
+        (new Store({
+            target: '/aps/2/resources/' + aps.context.vars.target.aps.id
+        })).query().then(function(target) {
+            console.log(aps, target);
+        });
+    }
+
     function eventBlock(Store, target) {
         return ['aps/Container', {
                 id: 'fs-events',
@@ -92,8 +103,15 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
                             field: 'name',
                             name: 'Name',
                             type: 'resourceName'
+                        },
+                        {
+                            field: 'timezone',
+                            name: 'Time Zone'
+                        },
+                        {
+                            field: 'owner',
+                            name: 'Name'
                         }]
-
                     },
                     [
                         ['aps/Toolbar', {},
@@ -101,7 +119,7 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
                                 ['aps/ToolbarButton', {
                                     id: 'btn-schedule',
                                     iconClass: 'sb-new-domain',
-                                    label: 'schedule',
+                                    label: 'Schedule',
                                     requireItems: true
                                 }],
                                 ['aps/ToolbarButton', {

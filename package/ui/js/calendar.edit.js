@@ -17,7 +17,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
     });
     tzList = tmp;
     var layout = ['aps/PageContainer', {
-            id: 'pageContainer'
+            id: 'page-container'
         },
         [
             ['aps/FieldSet', {
@@ -60,7 +60,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
         layout[2][0][2][2][1].value = at(model, 'timezone');
         load(layout).then(function() {
             aps.app.onNext = function() {
-                var page = registry.byId('pageContainer');
+                var page = registry.byId('page-container');
                 page.get('messageList').removeAll();
                 if (!page.validate()) {
                     aps.apsc.cancelProcessing();

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://aps-standard.org/ns/2" version="2.0">
     <id>http://aps.google.com/gcalendar</id>
     <name>GCalendar</name>
@@ -17,7 +16,7 @@
         <uri>http://dev.apsstandard.org/</uri>
     </packager>
     <presentation>
-        <summary>GCalendar - application for scheduling events on Google Calendar</summary>
+        <summary>GCalendar</summary>
         <description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they have scheduled.</description>
         <icon path="images/icon.png" />
         <changelog>
@@ -32,18 +31,7 @@
             <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/service" />
             <item id="calendars" label="Calendars">
-                <view id="calendars" label="Calendar list">
-                    <view id="calendar.view" label="{target.name} overview">
-                        <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
-                    </view>
-                    <view id="calendar.edit" label="Edit {target.name}">
-                        <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
-                        <controls>
-                            <cancel />
-                            <submit label="Save" />
-                        </controls>
-                    </view>
-                </view>
+                <view id="calendars" label="Calendar list" />
                 <view id="calendar.new0" label="New calendar">
                     <controls>
                         <cancel />
@@ -56,6 +44,16 @@
                             <submit label="Create" />
                         </controls>
                     </view>
+                </view>
+                <view id="calendar.view" label="{target.name} overview">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                </view>
+                <view id="calendar.edit" label="Edit {target.name}">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+                    <controls>
+                        <cancel />
+                        <submit label="Save" />
+                    </controls>
                 </view>
             </item>
             <item id="events" label="Events" />
@@ -86,6 +84,10 @@
         <presentation>
             <name>Global settings</name>
             <summary>Global settings for GCalendar</summary>
+            <infolinks>
+                <link class="deployment-guide" href="file:///doc/Deployment Guide.html">Deployment Guide</link>
+                <link class="support" href="http://dev.apsstandard.org/develop/rt/tickets/new/">APS Developer Support</link>
+            </infolinks>
         </presentation>
     </service>
     <service id="context">

@@ -1,0 +1,23 @@
+<html>
+<head>
+</head>
+<body>
+<input id="key" type="file"></input>
+<br/>
+<textarea id="b64">
+</textarea>
+<script>
+var reader = new FileReader();
+key.onchange = function () {
+	if (key.files[0].name.slice(-4) === '.p12')
+		reader.readAsDataURL(this.files[0]);
+	else
+		b64.value = 'Select the .p12 file'
+}
+
+reader.onload = function () {
+	b64.value = reader.result.slice(37);
+}
+</script>
+</body>
+</html>
