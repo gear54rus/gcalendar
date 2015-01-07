@@ -11,6 +11,10 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
             'calendar.view': [
                 ['aps/ResourceStore'],
                 calendarView
+            ],
+            'calendar.new1': [
+                ['dojo/text!./js/newCalendarWizard.json'],
+                calendarNew
             ]
         }))
         return;
@@ -50,32 +54,23 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
     }
 
     function suserviceView(Store, all) {
-        var store = new Store({
+        (new Store({
             target: '/aps/2/resources',
             apsType: 'http://aps.google.com/gcalendar/calendar/1.0'
-        });
-        store.query()
-            .then(function(calendars) {
-                return all(calendars.map(function(v) {
-                    return store.get(v.aps.id);
-                }));
-
-            })
-            .then(function(calendars) {
-                var target;
-                calendars.some(function(v) {
-                    if (v.owner.aps.id === aps.context.params.user.aps.id) {
-                        target = v;
-                        return true;
-                    }
-                });
-                //showMsg on error
-                layout[2][0][2][0][1].value = target.name;
-                layout[2][0][2][1][1].value = target.description;
-                layout[2][0][2][2][1].value = target.timezone;
-                layout[2].push(eventBlock(Store, target));
-                load(layout);
+        })).query().then(meta.getFull).then(function(calendars) {
+            var target;
+            calendars.some(function(v) {
+                if (v.owner.aps.id === aps.context.params.user.aps.id) {
+                    target = v;
+                    return true;
+                }
             });
+            layout[2][0][2][0][1].value = target.name;
+            layout[2][0][2][1][1].value = target.description;
+            layout[2][0][2][2][1].value = target.timezone;
+            layout[2].push(eventBlock(Store, target));
+            load(layout);
+        });
     }
 
     function calendarView(Store) {
@@ -88,7 +83,7 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
 
 
     function calendarNew() {
-        
+
     }
 
     function eventBlock(Store, target) {
@@ -108,12 +103,10 @@ require(['js/meta.js', 'dojox/mvc/getStateful', 'aps/load'], function(meta, getS
                             field: 'name',
                             name: 'Name',
                             type: 'resourceName'
-                        },
-                        {
+                        }, {
                             field: 'timezone',
                             name: 'Time Zone'
-                        },
-                        {
+                        }, {
                             field: 'owner',
                             name: 'Name'
                         }]

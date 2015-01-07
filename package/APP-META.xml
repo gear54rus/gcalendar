@@ -57,6 +57,7 @@
                 </view>
             </item>
             <item id="events" label="Events" />
+			<item id="settings" label="Settings"/>
         </navigation>
         <navigation id="suwizard">
             <view id="suwizard.new" label="Add new calendar for Service User">

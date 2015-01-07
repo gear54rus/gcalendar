@@ -14,6 +14,12 @@ class context extends \APS\ResourceBase {
     public $eventTTL;
 
     /**
+    * @type(string)
+    * @required
+    */
+    public $defaultTimezone;
+
+    /**
      * @link("http://aps.google.com/gcalendar/globals/1.0")
      * @required
      */
@@ -31,7 +37,7 @@ class context extends \APS\ResourceBase {
     public $calendars;
 
     public function _getDefault() {
-        return array('eventTTL' => 1440);
+        return array('eventTTL' => 1440, 'defaultTimezone' => 'Africa/Abidjan');
     }
 
     public function provision() {

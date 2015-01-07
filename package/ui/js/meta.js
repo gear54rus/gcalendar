@@ -1,4 +1,4 @@
-define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], function(registry, Message, PageContainer) {
+define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all', 'aps/xhr', 'aps/ready!'], function(registry, Message, PageContainer, all, xhr) {
     var meta = {},
         mode;
     meta.appId = 'http://aps.google.com/gcalendar';
@@ -21,6 +21,11 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'aps/ready!'], fun
             closeable: closeable
         }));
         page.startup();
+    };
+    meta.getFull = function(resources) {
+        return all(resources.map(function(v) {
+            return xhr.get('/aps/2/resources/' + v.aps.id);
+        }));
     };
     meta.check = function(modes) {
         if (aps.context.view.id.indexOf(meta.appId) !== 0) {
