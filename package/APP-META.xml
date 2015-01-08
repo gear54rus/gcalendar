@@ -34,18 +34,23 @@
                 <view id="calendars" label="Calendar list" />
                 <view id="calendar.new0" label="New calendar">
                     <controls>
-                        <cancel />
                         <next />
+                        <cancel />
                     </controls>
                     <view id="calendar.new1" label="Review">
                         <controls>
+                            <finish label="Create" />
+                            <prev label="Edit" />
                             <cancel />
-                            <prev />
-                            <submit label="Create" />
                         </controls>
                     </view>
                 </view>
                 <view id="calendar.view" label="{target.name} overview">
+                    <controls>
+                        <next label="Edit" />
+                        <prev label="Back" />
+                        <submit label="Delete" />
+                    </controls>
                     <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
                 </view>
                 <view id="calendar.edit" label="Edit {target.name}">
@@ -57,7 +62,7 @@
                 </view>
             </item>
             <item id="events" label="Events" />
-			<item id="settings" label="Settings"/>
+            <item id="settings" label="Settings" />
         </navigation>
         <navigation id="suwizard">
             <view id="suwizard.new" label="Add new calendar for Service User">

@@ -1,4 +1,4 @@
-require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/load', 'aps/ready!'], function(Store, StatefulArray, registry, load) {
+require(['js/meta.js', 'aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/load', 'aps/ready!'], function(meta, Store, StatefulArray, registry, load) {
     var selectionArray = new StatefulArray();
     load(['aps/PageContainer', {
             id: 'page-container'
@@ -15,6 +15,9 @@ require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/
                         field: 'name',
                         name: 'Name',
                         type: 'resourceName'
+                    }, {
+                        field: 'timezone',
+                        name: 'Timezone'
                     }]
                 },
                 [
@@ -25,6 +28,7 @@ require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/
                                 iconClass: 'sb-add-new',
                                 label: 'Create'
                             }],
+                            ['aps/ToolbarSeparator'],
                             ['aps/ToolbarButton', {
                                 id: 'btn-delete',
                                 iconClass: 'sb-app-delete',
@@ -37,6 +41,9 @@ require(['aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/
             ]
         ]
     ]).then(function() {
+        var data = meta.wizard();
+        if (data)
+            meta.showMsg.apply(this, data);
         registry.byId('btn-create').on('click', function() {
             aps.apsc.gotoView('calendar.new0');
         });

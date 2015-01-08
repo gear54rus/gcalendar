@@ -1,4 +1,4 @@
-define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all', 'aps/xhr', 'aps/ready!'], function(registry, Message, PageContainer, all, xhr) {
+define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all', 'aps/xhr', 'aps/WizardData', 'aps/ready!'], function(registry, Message, PageContainer, all, xhr, wizardData) {
     var meta = {},
         mode;
     meta.appId = 'http://aps.google.com/gcalendar';
@@ -14,7 +14,6 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
         }
         var messages = page.get('messageList');
         messages.removeAll();
-        console.log(closeable);
         messages.addChild(new Message({
             description: data + (object.message ? '<br />' + object.message : ''),
             type: type || 'error',
@@ -22,10 +21,25 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
         }));
         page.startup();
     };
-    meta.getFull = function(resources) {
-        return all(resources.map(function(v) {
+    meta.getFull = function(resource) {
+        return Array.isArray(resource) ? all(resource.map(function(v) {
             return xhr.get('/aps/2/resources/' + v.aps.id);
-        }));
+        })) : xhr.get('/aps/2/resources/' + resource.aps.id);
+    };
+    meta.wizard = function(data) {
+        if (arguments.length) {
+            return wizardData.put(data);
+        } else {
+            data = wizardData.get();
+            if (data) {
+                wizardData.put(null);
+                return data;
+            }
+            return null;
+        }
+    };
+    meta.userInfo = function(user) {
+        return user.userId + ': ' + user.displayName + ' (' + user.login + ')';
     };
     meta.check = function(modes) {
         if (aps.context.view.id.indexOf(meta.appId) !== 0) {
