@@ -57,7 +57,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
     function suwizardNew(modelCalendar) {
         var model = getStateful(JSON.parse(modelCalendar));
         model.name = aps.context.params.user.displayName + '\'s calendar';
-        model.timezone = aps.context.vars.context.defaultTimezone;
+        model.timezone = layout[2][0][2][2][1].options[0].value;
         layout[2][0][2][0][1].value = at(model, 'name');
         layout[2][0][2][1][1].value = at(model, 'description');
         layout[2][0][2][2][1].value = at(model, 'timezone');

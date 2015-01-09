@@ -47,5 +47,28 @@ require(['js/meta.js', 'aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/re
         registry.byId('btn-create').on('click', function() {
             aps.apsc.gotoView('calendar.new0');
         });
+        registry.byId('btn-delete').on('click', function() {
+            if (!confirm('Are you sure that you want to delete all selected calendars and all associated events?')) {
+                this.cancel();
+                return;
+            }
+            aps.apsc.showLoading();
+            var button = this,
+                grid = registry.byId('gr-calendars'),
+                selectionArray = grid.get('selectionArray'),
+                store = grid.get('store'),
+                count = selectionArray.length;
+            selectionArray.forEach(function(v) {
+                store.remove(v).then(function() {
+                    selectionArray.splice(selectionArray.indexOf(v), 1);
+                    grid.refresh();
+                }, meta.showMsg).always(function () {
+                    if (--count === 0) {
+                        aps.apsc.hideLoading();
+                        button.cancel();
+                    }
+                });
+            });
+        });
     });
 });

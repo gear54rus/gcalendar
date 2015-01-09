@@ -5,16 +5,20 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                 suwizardOverview
             ],
             'suservice.view': [
-                ['aps/ResourceStore', 'dojo/promise/all'],
+                ['aps/ResourceStore', 'js/eventBlock.js'],
                 suserviceView
             ],
             'calendar.view': [
-                ['aps/ResourceStore', 'dojo/promise/all'],
+                ['aps/ResourceStore', 'js/eventBlock.js'],
                 calendarView
             ],
             'calendar.new1': [
                 ['dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore'],
                 calendarNew
+            ],
+            'mycp.settings': [
+                [],
+                myCPSettings
             ]
         }))
         return;
@@ -53,7 +57,7 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
         load(layout);
     }
 
-    function suserviceView(Store) {
+    function suserviceView(Store, eventBlock) {
         (new Store({
             target: '/aps/2/resources',
             apsType: 'http://aps.google.com/gcalendar/calendar/1.0'
@@ -68,12 +72,14 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             layout[2][0][2][0][1].value = target.name;
             layout[2][0][2][1][1].value = target.description;
             layout[2][0][2][2][1].value = target.timezone;
-            layout[2].push(eventBlock(Store, target));
+            layout[2].push(eventBlock({
+                calendarId: target.aps.id
+            }));
             load(layout);
         });
     }
 
-    function calendarView(Store) {
+    function calendarView(Store, eventBlock) {
         var target;
         meta.getFull(aps.context.vars.target).then(function(resource) {
             target = resource;
@@ -93,7 +99,9 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                     ]
                 ],
                 layout[2][0],
-                eventBlock(Store, target)
+                eventBlock({
+                    calendarId: target.aps.id
+                })
             ];
             layout[2][1][2][0][1].value = target.name;
             layout[2][1][2][1][1].value = target.description;
@@ -166,52 +174,11 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
         });
     }
 
-    function eventBlock(Store, target, showControls) {
-        var result = ['aps/Container', {
-                id: 'fs-events',
-                title: 'Events on this calendar'
-            },
-            [
-                ['aps/Grid', {
-                    id: 'gr-events',
-                    store: new Store({
-                        target: '/aps/2/resources/' + target.aps.id + '/events'
-                    }),
-                    selectionMode: 'multiple',
-                    apsResourceViewId: 'event.view',
-                    columns: [{
-                        field: 'name',
-                        name: 'Name',
-                        type: 'resourceName'
-                    }, {
-                        field: 'timezone',
-                        name: 'Time Zone'
-                    }, {
-                        field: 'owner',
-                        name: 'Name'
-                    }]
-                }]
-            ]
-        ];
-        if (showControls)
-            result[2][0].push([
-                ['aps/Toolbar', {},
-                    [
-                        ['aps/ToolbarButton', {
-                            id: 'btn-schedule',
-                            iconClass: 'sb-new-domain',
-                            label: 'Schedule',
-                            requireItems: true
-                        }],
-                        ['aps/ToolbarButton', {
-                            id: 'btn-cancel',
-                            iconClass: 'sb-delete',
-                            label: 'Cancel',
-                            requireItems: true
-                        }]
-                    ]
-                ]
-            ]);
-        return result;
+    function myCPSettings() {
+        var calendar = aps.context.vars.calendar;
+        layout[2][0][2][0][1].value = calendar.name;
+        layout[2][0][2][1][1].value = calendar.description;
+        layout[2][0][2][2][1].value = calendar.timezone;
+        load(layout);
     }
 });

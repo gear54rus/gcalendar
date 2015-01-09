@@ -5,6 +5,7 @@ require 'util.php';
 /**
  * @type("http://aps.google.com/gcalendar/calendar/1.0")
  * @implements("http://aps-standard.org/types/core/resource/1.0")
+ * @access(referrer,true)
  */
 class calendar extends \APS\ResourceBase {
     /**
@@ -66,6 +67,37 @@ class calendar extends \APS\ResourceBase {
         $l->debug('Deleting calendar...');
         $l->debug(print_r($this, true));
         getService($this->context->globals)->calendars->delete($this->googleId);
+    }
+
+    /**
+    * @verb(POST)
+    * @path("/scheduleEvent")
+    * @access(referrer,true)
+    * @param("http://aps.google.com/gcalendar/event/1.0",body)
+    */
+    public function scheduleEvent($event) {
+        $event = json_decode($event);
+        $new = \APS\TypeLibrary::newResourceByTypeId('http://aps.google.com/gcalendar/event/1.0');
+        $new->summary = $event->summary;
+        $new->description = $event->description;
+        $new->location = $event->location;
+        $new->timeZone = $event->timeZone;
+        $new->start = $event->start;
+        $new->end = $event->end;
+        $new->attendees = $event->attendees;
+        $new->reminders = $event->reminders;
+        $new->calendar = $this;
+        \APS\Request::getController()->impersonate($this)->provisionResource($new);
+    }
+
+    /**
+    * @verb(POST)
+    * @path("/scheduleEvent1")
+    * @access(referrer,true)
+    * @param(string,body)
+    */
+    public function scheduleEvent1($event) {
+        \APS\Logger::get()->debug(print_r($event, true));
     }
 }
 

@@ -31,7 +31,7 @@
             <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/service" />
             <item id="calendars" label="Calendars">
-                <view id="calendars" label="Calendar list" />
+                <view id="calendars" />
                 <view id="calendar.new0" label="New calendar">
                     <controls>
                         <next />
@@ -46,12 +46,12 @@
                     </view>
                 </view>
                 <view id="calendar.view" label="{target.name} overview">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
                     <controls>
                         <next label="Edit" />
                         <prev label="Back" />
                         <submit label="Delete" />
                     </controls>
-                    <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
                 </view>
                 <view id="calendar.edit" label="Edit {target.name}">
                     <var name="target" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
@@ -61,7 +61,15 @@
                     </controls>
                 </view>
             </item>
-            <item id="events" label="Events" />
+            <item id="events" label="Events">
+                <view id="events" />
+                <view id="event.view">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/event/1.0" />
+                    <controls>
+                        <prev label="Back" />
+                    </controls>
+                </view>
+            </item>
             <item id="settings" label="Settings" />
         </navigation>
         <navigation id="suwizard">
@@ -75,7 +83,44 @@
                 <plugs-to id="http://www.aps-standard.org/ui/service/suservice.view" />
             </view>
         </navigation>
-        <navigation id="mycp" label="GCalendar" />
+        <navigation id="mycp" label="GCalendar">
+            <var name="calendar" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
+            <plugs-to id="http://www.aps-standard.org/ui/user" />
+            <item id="mycp">
+                <view id="mycp">
+                    <controls>
+                        <submit label="Edit" />
+                    </controls>
+                </view>
+                <view id="mycp.edit" label="Edit calendar">
+                    <controls>
+                        <cancel />
+                        <submit label="Save" />
+                    </controls>
+                </view>
+                <view id="event.new0" label="Schedule event">
+                    <controls>
+                        <next />
+                        <cancel />
+                    </controls>
+                    <view id="event.new1" label="Review">
+                        <controls>
+                            <finish label="Schedule" />
+                            <prev label="Edit" />
+                            <cancel />
+                        </controls>
+                    </view>
+                </view>
+                <view id="mycp.event.view" label="{target.name} overview">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/event/1.0" />
+                    <controls>
+                        <next label="Edit" />
+                        <prev label="Back" />
+                        <submit label="Cancel event" />
+                    </controls>
+                </view>
+            </item>
+        </navigation>
     </presentation>
     <license-agreement must-accept="true">
         <free />

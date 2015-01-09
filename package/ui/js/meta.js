@@ -57,5 +57,6 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
     meta.run = function() {
         require.apply(this, mode);
     };
+    console.log(aps);
     return meta;
 });

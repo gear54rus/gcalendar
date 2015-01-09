@@ -1,0 +1,18 @@
+{
+    "aps": {
+        "type": "http://aps.google.com/gcalendar/event/1.0"
+    },
+    "summary": "",
+    "description": "",
+    "location": "",
+    "timzeone": "",
+    "start": "",
+    "end": "",
+    "attendees": [],
+    "reminders": [],
+    "calendar": {
+        "aps": {
+            "id": ""
+        }
+    }
+}
