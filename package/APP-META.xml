@@ -31,7 +31,7 @@
             <var name="context" type-id="http://aps.google.com/gcalendar/context/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/service" />
             <item id="calendars" label="Calendars">
-                <view id="calendars" />
+                <view id="calendars" label="Calendar list" />
                 <view id="calendar.new0" label="New calendar">
                     <controls>
                         <next />
@@ -86,18 +86,8 @@
         <navigation id="mycp" label="GCalendar">
             <var name="calendar" type-id="http://aps.google.com/gcalendar/calendar/1.0" />
             <plugs-to id="http://www.aps-standard.org/ui/user" />
-            <item id="mycp">
-                <view id="mycp">
-                    <controls>
-                        <submit label="Edit" />
-                    </controls>
-                </view>
-                <view id="mycp.edit" label="Edit calendar">
-                    <controls>
-                        <cancel />
-                        <submit label="Save" />
-                    </controls>
-                </view>
+            <item id="mycp.view" label="Calendar view">
+                <view id="mycp.view" label="{calendar.name}" />
                 <view id="event.new0" label="Schedule event">
                     <controls>
                         <next />
@@ -114,7 +104,6 @@
                 <view id="mycp.event.view" label="{target.name} overview">
                     <var name="target" type-id="http://aps.google.com/gcalendar/event/1.0" />
                     <controls>
-                        <next label="Edit" />
                         <prev label="Back" />
                         <submit label="Cancel event" />
                     </controls>

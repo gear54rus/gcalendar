@@ -5,7 +5,6 @@ require 'util.php';
 /**
  * @type("http://aps.google.com/gcalendar/event/1.0")
  * @implements("http://aps-standard.org/types/core/resource/1.0")
- * @access(referrer,true) 
  */
 class event extends \APS\ResourceBase {
 	/**
@@ -36,7 +35,7 @@ class event extends \APS\ResourceBase {
 	* @type(string)
 	* @required
 	*/
-	public $timeZone;
+	public $timezone;
 
 	/**
 	* @type(string)
@@ -66,16 +65,20 @@ class event extends \APS\ResourceBase {
      */
 	public $calendar;
 
+	public function _getDefault() {
+		return array('attendees' => array(), 'reminders' => array());
+	}
+
 	public function provision() {
 		$event = new Google_Service_Calendar_Event();
 		$event->setSummary($this->summary);
 		$event->setLocation($this->location);
 		$tmp = new Google_Service_Calendar_EventDateTime();
-		$tmp->setTimezone($this->timeZone);
+		$tmp->setTimezone($this->timezone);
 		$tmp->setDateTime($this->start);
 		$event->setStart($tmp);
 		$tmp = new Google_Service_Calendar_EventDateTime();
-		$tmp->setTimezone($this->timeZone);
+		$tmp->setTimezone($this->timezone);
 		$tmp->setDateTime($this->end);
 		$event->setEnd($tmp);
 		$tmp = array();
@@ -102,10 +105,6 @@ class event extends \APS\ResourceBase {
 		$this->googleId = getService($this->calendar->context->globals)->events->insert($this->calendar->googleId, $event)->getId();
 		\APS\Logger::get()->debug(print_r($this, true));
 	}	
-
-	public function configure($new) {
-
-	}
 
 	public function unprovision() {
 		getService($this->calendar->context->globals)->events->delete($this->calendar->googleId, $this->googleId, true);

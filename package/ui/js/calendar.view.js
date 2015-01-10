@@ -16,8 +16,8 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                 ['dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore'],
                 calendarNew
             ],
-            'mycp.settings': [
-                [],
+            'mycp.view': [
+                ['js/eventBlock.js', 'dijit/registry'],
                 myCPSettings
             ]
         }))
@@ -85,24 +85,21 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             target = resource;
             return meta.getFull(resource.owner);
         }).then(function(resource) {
-            layout[2] = [
-                ['aps/FieldSet', {
-                        id: 'fs-owner',
-                        title: 'Calendar owner'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-owner',
-                            label: 'Service user',
-                            value: meta.userInfo(resource)
-                        }]
-                    ]
-                ],
-                layout[2][0],
-                eventBlock({
-                    calendarId: target.aps.id
-                })
-            ];
+            layout[2].unshift(['aps/FieldSet', {
+                    id: 'fs-owner',
+                    title: 'Calendar owner'
+                },
+                [
+                    ['aps/Output', {
+                        id: 'ou-owner',
+                        label: 'Service user',
+                        value: meta.userInfo(resource)
+                    }]
+                ]
+            ]);
+            layout[2].push(eventBlock({
+                calendarId: target.aps.id
+            }));
             layout[2][1][2][0][1].value = target.name;
             layout[2][1][2][1][1].value = target.description;
             layout[2][1][2][2][1].value = target.timezone;
@@ -132,29 +129,29 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
 
 
     function calendarNew(newCalendarWizard, Store) {
-        var data = meta.wizard(),
-            model = data.model,
+        var data = meta.wizard();
+        if (!data) {
+            aps.apsc.gotoView('calendar.new0');
+            return;
+        }
+        var model = data.model,
             steps = JSON.parse(newCalendarWizard);
         steps[1].active = true;
-        layout[2] = [
-            ['aps/WizardControl', {
-                id: 'wc-wizard',
-                steps: steps
-            }],
-            ['aps/FieldSet', {
-                    id: 'fs-owner',
-                    title: 'Calendar owner'
-                },
-                [
-                    ['aps/Output', {
-                        id: 'ou-owner',
-                        label: 'Service user',
-                        value: data.user
-                    }]
-                ]
-            ],
-            layout[2][0]
-        ];
+        layout[2].unshift(['aps/WizardControl', {
+            id: 'wc-wizard',
+            steps: steps
+        }], ['aps/FieldSet', {
+                id: 'fs-owner',
+                title: 'Calendar owner'
+            },
+            [
+                ['aps/Output', {
+                    id: 'ou-owner',
+                    label: 'Service user',
+                    value: data.user
+                }]
+            ]
+        ]);
         layout[2][2][2][0][1].value = model.name;
         layout[2][2][2][1][1].value = model.description;
         layout[2][2][2][2][1].value = model.timezone;
@@ -171,14 +168,29 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                     aps.apsc.gotoView('calendars');
                 }, meta.showMsg);
             };
+            aps.app.onCancel = function() {
+                meta.wizard();
+                aps.apsc.gotoView('calendars');
+            };
         });
     }
 
-    function myCPSettings() {
-        var calendar = aps.context.vars.calendar;
+    function myCPSettings(eventBlock, registry) {
+        var calendar = aps.context.vars.calendar,
+            data = meta.wizard();
+        if (data)
+            meta.showMsg.apply(this, data);
         layout[2][0][2][0][1].value = calendar.name;
         layout[2][0][2][1][1].value = calendar.description;
         layout[2][0][2][2][1].value = calendar.timezone;
-        load(layout);
+        layout[2].push(eventBlock({
+            calendarId: calendar.aps.id,
+            showControls: true
+        }));
+        load(layout).then(function() {
+            registry.byId('btn-schedule').on('click', function() {
+                aps.apsc.gotoView('event.new0');
+            })
+        });
     }
 });

@@ -29,17 +29,18 @@ define(['aps/ResourceStore', 'aps/Memory'], function(Store, Memory) {
             ];
         if (parameters.showControls)
             result[2][0].push([
-                ['aps/Toolbar', {},
+                ['aps/Toolbar', {
+                        class: 'sid-kapc'
+                    },
                     [
                         ['aps/ToolbarButton', {
                             id: 'btn-schedule',
-                            iconClass: 'sb-new-domain',
-                            label: 'Schedule',
-                            requireItems: true
+                            iconClass: 'sb-task-add',
+                            label: 'Schedule'
                         }],
                         ['aps/ToolbarButton', {
                             id: 'btn-cancel',
-                            iconClass: 'sb-delete',
+                            iconClass: 'sb-terminate',
                             label: 'Cancel',
                             requireItems: true
                         }]

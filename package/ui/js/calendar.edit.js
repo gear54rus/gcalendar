@@ -14,7 +14,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
             ]
         }))
         return;
-    var dt = moment(),
+    var dt = moment.utc(),
         layout = ['aps/PageContainer', {
                 id: 'page-container'
             },
@@ -43,7 +43,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                             label: 'Timezone',
                             options: JSON.parse(tzList).map(function(v) {
                                 return {
-                                    label: v + dt.tz(v).format(' (UTCZ, YYYY-MM-DD HH:mm)'),
+                                    label: v + dt.clone().tz(v).format(' (UTCZ, ' + meta.timeFormat + ')'),
                                     value: v
                                 };
                             })
@@ -64,7 +64,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
         load(layout).then(function() {
             aps.app.onNext = function() {
                 var page = registry.byId('page-container');
-                page.get('messageList').removeAll();
+                meta.clearMessages(page);
                 if (!page.validate()) {
                     aps.apsc.cancelProcessing();
                     return;
@@ -109,32 +109,28 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                 steps = JSON.parse(newCalendarWizard),
                 users = {};
             steps[0].active = true;
-            layout[2] = [
-                ['aps/WizardControl', {
-                    id: 'wc-wizard',
-                    steps: steps
-                }],
-                ['aps/FieldSet', {
-                        id: 'fs-owner',
-                        title: 'Calendar owner'
-                    },
-                    [
-                        ['aps/Select', {
-                            id: 'sel-owner',
-                            label: 'Service user',
-                            options: resources[1].map(function(v) {
-                                users[v.aps.id] = v;
-                                return {
-                                    label: meta.userInfo(v),
-                                    value: v.aps.id
-                                }
-                            }),
-                            required: true
-                        }]
-                    ]
-                ],
-                layout[2][0]
-            ];
+            layout[2].unshift(['aps/WizardControl', {
+                id: 'wc-wizard',
+                steps: steps
+            }], ['aps/FieldSet', {
+                    id: 'fs-owner',
+                    title: 'Calendar owner'
+                },
+                [
+                    ['aps/Select', {
+                        id: 'sel-owner',
+                        label: 'Service user',
+                        options: resources[1].map(function(v) {
+                            users[v.aps.id] = v;
+                            return {
+                                label: meta.userInfo(v),
+                                value: v.aps.id
+                            }
+                        }),
+                        required: true
+                    }]
+                ]
+            ]);
             if (!data) {
                 model.owner.aps.id = layout[2][1][2][0][1].options[0].value;
                 model.timezone = aps.context.vars.context.defaultTimezone;
@@ -155,6 +151,13 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                     data.user = meta.userInfo(u);
                 });
                 aps.app.onNext = function() {
+                    var page = registry.byId('page-container');
+                    meta.clearMessages(page);
+                    if (!page.validate()) {
+                        aps.apsc.cancelProcessing();
+                        return;
+                    }
+                    data.model = getPlainValue(model);
                     meta.wizard(data);
                     aps.apsc.gotoView('calendar.new1');
                 };
@@ -168,27 +171,30 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
             target = resource;
             return meta.getFull(resource.owner);
         }).then(function(resource) {
-            layout[2] = [
-                ['aps/FieldSet', {
-                        id: 'fs-owner',
-                        title: 'Calendar owner'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-owner',
-                            label: 'Service user',
-                            value: meta.userInfo(resource)
-                        }]
-                    ]
-                ],
-                layout[2][0]
-            ];
+            layout[2].unshift(['aps/FieldSet', {
+                    id: 'fs-owner',
+                    title: 'Calendar owner'
+                },
+                [
+                    ['aps/Output', {
+                        id: 'ou-owner',
+                        label: 'Service user',
+                        value: meta.userInfo(resource)
+                    }]
+                ]
+            ]);
             var model = getStateful(aps.context.vars.target);
             layout[2][1][2][0][1].value = at(model, 'name');
             layout[2][1][2][1][1].value = at(model, 'description');
             layout[2][1][2][2][1].value = at(model, 'timezone');
             load(layout).then(function() {
                 aps.app.onSubmit = function() {
+                    var page = registry.byId('page-container');
+                    meta.clearMessages(page);
+                    if (!page.validate()) {
+                        aps.apsc.cancelProcessing();
+                        return;
+                    }
                     (new Store({
                         target: '/aps/2/resources'
                     })).put(getPlainValue(model)).then(function() {

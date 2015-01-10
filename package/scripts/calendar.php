@@ -72,8 +72,7 @@ class calendar extends \APS\ResourceBase {
     /**
     * @verb(POST)
     * @path("/scheduleEvent")
-    * @access(referrer,true)
-    * @param("http://aps.google.com/gcalendar/event/1.0",body)
+    * @param("http://aps.google.com/gcalendar/event/1.0#event",body)
     */
     public function scheduleEvent($event) {
         $event = json_decode($event);
@@ -81,7 +80,7 @@ class calendar extends \APS\ResourceBase {
         $new->summary = $event->summary;
         $new->description = $event->description;
         $new->location = $event->location;
-        $new->timeZone = $event->timeZone;
+        $new->timezone = $event->timezone;
         $new->start = $event->start;
         $new->end = $event->end;
         $new->attendees = $event->attendees;
@@ -91,13 +90,35 @@ class calendar extends \APS\ResourceBase {
     }
 
     /**
-    * @verb(POST)
-    * @path("/scheduleEvent1")
-    * @access(referrer,true)
-    * @param(string,body)
+    * @verb(GET)
+    * @path("/getEvent")
+    * @param(string,path)
+    * @return("http://aps.google.com/gcalendar/event/1.0#event",application/json)
     */
-    public function scheduleEvent1($event) {
-        \APS\Logger::get()->debug(print_r($event, true));
+    public function getEvent($id = null) {
+    	if (is_null($id)) {
+
+    	} else {
+
+    	}
+    }
+
+    /**
+    * @verb(GET)
+    * @path("/listEvents")
+    * @return("http://aps.google.com/gcalendar/event/1.0#event[]",application/json)
+    */
+    public function listEvents() {
+    	return $this->getEvent();
+    }
+
+    /**
+    * @verb(POST)
+    * @path("/cancelEvent")
+    * @param(string,path)
+    */
+    public function cancelEvent($id) {
+
     }
 }
 

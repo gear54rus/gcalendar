@@ -2,6 +2,7 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
     var meta = {},
         mode;
     meta.appId = 'http://aps.google.com/gcalendar';
+    meta.timeFormat = 'YYYY-MM-DD HH:mm';
     meta.showMsg = function(data, type, closeable) {
         var object = data.response ? JSON.parse(data.response.text) : data,
             page = registry.byId('page-container');
@@ -21,6 +22,9 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
         }));
         page.startup();
     };
+    meta.clearMessages = function(page) {
+        return page ? page.get('messageList').removeAll() : registry.byId('page-container').get('messageList').removeAll();
+    }
     meta.getFull = function(resource) {
         return Array.isArray(resource) ? all(resource.map(function(v) {
             return xhr.get('/aps/2/resources/' + v.aps.id);
@@ -40,6 +44,29 @@ define(['dijit/registry', 'aps/Message', 'aps/PageContainer', 'dojo/promise/all'
     };
     meta.userInfo = function(user) {
         return user.userId + ': ' + user.displayName + ' (' + user.login + ')';
+    };
+    meta.globalMatch = function(string, rx) {
+        if (typeof string !== 'string')
+            throw Error('String expected as the first argument');
+        if (!(rx instanceof RegExp))
+            throw Error('RegExp expected as the second argument');
+        var result = [],
+            tmp;
+        rx = new RegExp(rx.source, 'g' + (rx.ignoreCase ? 'i' : '') + (rx.multiline ? 'm' : ''));
+        while (tmp = rx.exec(string))
+            result.push(tmp);
+        return result;
+    };
+    meta.unique = function(array) {
+        var n = {},
+            r = [];
+        for (var i = 0; i < array.length; i++) {
+            if (!n[array[i]]) {
+                n[array[i]] = true;
+                r.push(array[i]);
+            }
+        }
+        return r;
     };
     meta.check = function(modes) {
         if (aps.context.view.id.indexOf(meta.appId) !== 0) {
