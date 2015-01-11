@@ -37,7 +37,7 @@ class context extends \APS\ResourceBase {
     public $calendars;
 
     public function _getDefault() {
-        return array('eventTTL' => 1440, 'defaultTimezone' => 'Africa/Abidjan');
+        return array('eventTTL' => 1440, 'defaultTimezone' => 'UTC');
     }
 
     public function provision() {
@@ -50,5 +50,22 @@ class context extends \APS\ResourceBase {
 
     public function unprovision() {
 
+    }
+
+    /**
+    * @verb(GET)
+    * @path("/listEvents")
+    * @return("http://aps.google.com/gcalendar/event/1.0#event[]",application/json)
+    */
+    public function listEvents() {
+        $l = \APS\Logger::get();
+        $l->debug('Listing events');
+        $result = array();
+        foreach($this->calendars as $v) {
+            foreach($v->events as $v1) {
+                $result[] = \APS\Request::getController()->getResource($v1->aps->id);
+            }
+        }
+        return $result;
     }
 }

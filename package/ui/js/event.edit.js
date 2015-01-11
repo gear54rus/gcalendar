@@ -1,4 +1,4 @@
-require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, moment, tzList, getStateful, at, getPlainValue, load, registry) {
+require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, tzList, getStateful, at, getPlainValue, load, registry) {
     if (!meta.check({
             'event.new0': [
                 ['dojo/text!./js/modelEvent.json', 'dojo/text!./js/newEventWizard.json'],
@@ -6,7 +6,8 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
             ]
         }))
         return;
-    var dt = moment.utc(),
+    var m = meta.moment,
+        dt = meta.dt,
         layout = ['aps/PageContainer', {
                 id: 'page-container'
             },
@@ -60,7 +61,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                             label: 'Timezone',
                             options: JSON.parse(tzList).map(function(v) {
                                 return {
-                                    label: v + dt.clone().tz(v).format(' (UTCZ, ' + meta.timeFormat + ')'),
+                                    label: meta.timezoneInfo(v, dt),
                                     value: v
                                 };
                             })
@@ -89,7 +90,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                 ]
             ]
         ];
-    meta.run();
+    return meta.run();
 
     function eventNew(modelEvent, newEventWizard) {
         var data = meta.wizard(),
@@ -113,17 +114,17 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
         layout[2][1][2][2][1].value = at(model, 'location');
         var timeTransform = {
             format: function(v) {
-                return moment(v).format(meta.timeFormat);
+                return m(v).format(meta.timeFormat);
             },
             parse: function(v) {
-                v = moment(v);
+                v = m(v);
                 return v.isValid() ? v.format(gTimeFormat) : '';
             }
         };
         layout[2][2][2][0][1].value = at(model, 'start').transform(timeTransform);
         layout[2][2][2][1][1].value = at(model, 'end').transform(timeTransform);
         layout[2][2][2][0][1].validator = layout[2][2][2][1][1].validator = function(v) {
-            return moment(v).isValid();
+            return m(v).isValid();
         };
         layout[2][2][2][2][1].value = at(model, 'timezone');
         layout[2][3][2][0][1].value = at(model, 'attendees').transform({
@@ -142,7 +143,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
             },
             parse: function(v) {
                 return meta.globalMatch(v, /([0-9]+),? */).map(function(v) {
-                    return parseInt(v[1]);
+                    return parseInt(v[1], 10);
                 }).filter(function(v) {
                     return (v > 0) && (v <= (10 * 365 * 24 * 60));
                 });
@@ -151,20 +152,19 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
         load(layout).then(function() {
             var prevTimezone = model.timezone;
             registry.byId('sel-timezone').on('change', function(v) {
-                var tmp = moment.tz(model.start, prevTimezone);
+                var tmp = m.tz(model.start, prevTimezone);
                 model.set('start', tmp.tz(v).format(tmp._f));
-                tmp = moment.tz(model.end, prevTimezone);
+                tmp = m.tz(model.end, prevTimezone);
                 model.set('end', tmp.tz(v).format(tmp._f));
                 prevTimezone = v;
             });
             aps.app.onNext = function() {
                 var page = registry.byId('page-container');
                 meta.clearMessages(page);
-                console.log(data);                               
                 if (!page.validate() || !(function() {
-                        var dt = moment.tz(model.timezone),
-                            start = moment.tz(model.start, model.timezone),
-                            end = moment.tz(model.end, model.timezone);
+                        var dt = m.tz(model.timezone),
+                            start = m.tz(model.start, model.timezone),
+                            end = m.tz(model.end, model.timezone);
                         if (start.isBefore(dt)) {
                             meta.showMsg('Event start time is in the past!', 'error', true);
                             return false;
@@ -185,10 +185,10 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                 data.model = getPlainValue(model);
                 meta.wizard(data);
                 aps.apsc.gotoView('event.new1');
-            }
+            };
             aps.app.onCancel = function() {
                 aps.apsc.gotoView('mycp.view');
-            }
+            };
         });
     }
 });

@@ -65,11 +65,14 @@ class event extends \APS\ResourceBase {
      */
 	public $calendar;
 
-	public function _getDefault() {
-		return array('attendees' => array(), 'reminders' => array());
-	}
-
 	public function provision() {
+		$l = \APS\Logger::get();
+		$l->debug('Provisioning event');
+		$l->debug(print_r($this, true));
+		if (!is_array($this->reminders)) //php runtime bug
+            $this->reminders = array();
+        if (!is_array($this->attendees))
+            $this->attendees = array();
 		$event = new Google_Service_Calendar_Event();
 		$event->setSummary($this->summary);
 		$event->setLocation($this->location);
@@ -82,6 +85,12 @@ class event extends \APS\ResourceBase {
 		$tmp->setDateTime($this->end);
 		$event->setEnd($tmp);
 		$tmp = array();
+		$attendee = new Google_Service_Calendar_EventAttendee();
+		$attendee->setResponseStatus('accepted');
+		$attendee->setEmail($this->calendar->owner->login);
+		$attendee->setDisplayName($this->calendar->owner->displayName);
+		$attendee->setOrganizer(true);
+		$tmp[] = $attendee;
 		foreach($this->attendees as $v) {
 			$attendee = new Google_Service_Calendar_EventAttendee();
 			$attendee->setResponseStatus('tentative');
@@ -100,14 +109,20 @@ class event extends \APS\ResourceBase {
 		}
 		$reminders->setOverrides($tmp);
 		$event->setReminders($reminders);
-		$event->setGuestsCanSeeOtherGuests(false);
+		$event->setGuestsCanSeeOtherGuests(true);
 		$event->setGuestsCanInviteOthers(false);
-		$this->googleId = getService($this->calendar->context->globals)->events->insert($this->calendar->googleId, $event)->getId();
-		\APS\Logger::get()->debug(print_r($this, true));
+		$this->googleId = getService($this->calendar->context->globals)->events->insert($this->calendar->googleId, $event, array('sendNotifications' => true))->getId();
 	}	
 
+	public function configure($new = null) {
+		throw new Exception('Event is an immutable object!');
+	}
+
 	public function unprovision() {
-		getService($this->calendar->context->globals)->events->delete($this->calendar->googleId, $this->googleId, true);
+		$l = \APS\Logger::get();
+		$l->debug('Unprovisioning event');
+		$l->debug(print_r($this, true));
+		getService($this->calendar->context->globals)->events->delete($this->calendar->googleId, $this->googleId, array('sendNotifications' => true));
 	}
 }
 

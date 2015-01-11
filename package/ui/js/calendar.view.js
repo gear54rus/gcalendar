@@ -17,43 +17,44 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                 calendarNew
             ],
             'mycp.view': [
-                ['js/eventBlock.js', 'dijit/registry'],
-                myCPSettings
+                ['dijit/registry', 'js/eventBlock.js', 'aps/xhr'],
+                myCPView
             ]
         }))
         return;
-    var layout = ['aps/PageContainer', {
-            id: 'page-container'
-        },
-        [
-            ['aps/FieldSet', {
-                    id: 'fs-params',
-                    title: 'Calendar parameters'
-                },
-                [
-                    ['aps/Output', {
-                        id: 'ou-name',
-                        label: 'Name'
-                    }],
-                    ['aps/Output', {
-                        id: 'ou-description',
-                        label: 'Description'
-                    }],
-                    ['aps/Output', {
-                        id: 'ou-timezone',
-                        label: 'Timezone'
-                    }]
+    var dt = meta.dt,
+        layout = ['aps/PageContainer', {
+                id: 'page-container'
+            },
+            [
+                ['aps/FieldSet', {
+                        id: 'fs-params',
+                        title: 'Calendar parameters'
+                    },
+                    [
+                        ['aps/Output', {
+                            id: 'ou-name',
+                            label: 'Name'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-description',
+                            label: 'Description'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-timezone',
+                            label: 'Timezone'
+                        }]
+                    ]
                 ]
             ]
-        ]
-    ];
-    meta.run();
+        ];
+    return meta.run();
 
     function suwizardOverview() {
-        var target = aps.context.params.objects[0];
-        layout[2][0][2][0][1].value = target.name;
-        layout[2][0][2][1][1].value = target.description;
-        layout[2][0][2][2][1].value = target.timezone;
+        var calendar = aps.context.params.objects[0];
+        layout[2][0][2][0][1].value = calendar.name;
+        layout[2][0][2][1][1].value = calendar.description;
+        layout[2][0][2][2][1].value = meta.timezoneInfo(calendar.timezone, dt);
         load(layout);
     }
 
@@ -62,29 +63,29 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             target: '/aps/2/resources',
             apsType: 'http://aps.google.com/gcalendar/calendar/1.0'
         })).query().then(meta.getFull).then(function(calendars) {
-            var target;
+            var calendar;
             calendars.some(function(v) {
                 if (v.owner.aps.id === aps.context.params.user.aps.id) {
-                    target = v;
+                    calendar = v;
                     return true;
                 }
             });
-            layout[2][0][2][0][1].value = target.name;
-            layout[2][0][2][1][1].value = target.description;
-            layout[2][0][2][2][1].value = target.timezone;
+            layout[2][0][2][0][1].value = calendar.name;
+            layout[2][0][2][1][1].value = calendar.description;
+            layout[2][0][2][2][1].value = meta.timezoneInfo(calendar.timezone, dt);
             layout[2].push(eventBlock({
-                calendarId: target.aps.id
+                calendarId: calendar.aps.id
             }));
             load(layout);
         });
     }
 
     function calendarView(Store, eventBlock) {
-        var target;
+        var calendar;
         meta.getFull(aps.context.vars.target).then(function(resource) {
-            target = resource;
+            calendar = resource;
             return meta.getFull(resource.owner);
-        }).then(function(resource) {
+        }).then(function(owner) {
             layout[2].unshift(['aps/FieldSet', {
                     id: 'fs-owner',
                     title: 'Calendar owner'
@@ -93,16 +94,16 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                     ['aps/Output', {
                         id: 'ou-owner',
                         label: 'Service user',
-                        value: meta.userInfo(resource)
+                        value: meta.userInfo(owner)
                     }]
                 ]
             ]);
             layout[2].push(eventBlock({
-                calendarId: target.aps.id
+                calendarId: calendar.aps.id
             }));
-            layout[2][1][2][0][1].value = target.name;
-            layout[2][1][2][1][1].value = target.description;
-            layout[2][1][2][2][1].value = target.timezone;
+            layout[2][1][2][0][1].value = calendar.name;
+            layout[2][1][2][1][1].value = calendar.description;
+            layout[2][1][2][2][1].value = meta.timezoneInfo(calendar.timezone, dt);
             load(layout).then(function() {
                 var data = meta.wizard();
                 if (data)
@@ -111,17 +112,17 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                     if (confirm('Are you sure that you want to delete this calendar and all its events?')) {
                         (new Store({
                             target: '/aps/2/resources'
-                        })).remove(target.aps.id).then(function() {
-                            meta.wizard(['Calendar "' + target.name + '" was successfully deleted!', 'info', true]);
+                        })).remove(calendar.aps.id).then(function() {
+                            meta.wizard(['Calendar "' + calendar.name + '" was successfully deleted!', 'info', true]);
                             aps.apsc.gotoView('calendars');
-                        });
+                        }, meta.showMsg);
                     }
                 };
                 aps.app.onPrev = function() {
                     aps.apsc.gotoView('calendars');
                 };
                 aps.app.onNext = function() {
-                    aps.apsc.gotoView('calendar.edit', target.aps.id);
+                    aps.apsc.gotoView('calendar.edit', calendar.aps.id);
                 };
             });
         });
@@ -154,7 +155,7 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
         ]);
         layout[2][2][2][0][1].value = model.name;
         layout[2][2][2][1][1].value = model.description;
-        layout[2][2][2][2][1].value = model.timezone;
+        layout[2][2][2][2][1].value = meta.timezoneInfo(model.timezone, dt);
         load(layout).then(function() {
             aps.app.onPrev = function() {
                 meta.wizard(data);
@@ -162,7 +163,6 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             };
             aps.app.onSubmit = function() {
                 (new Store({
-                    apsType: 'http://aps.google.com/gcalendar/calendar/1.0',
                     target: '/aps/2/resources/' + aps.context.vars.context.aps.id + '/calendars'
                 })).put(model).then(function() {
                     aps.apsc.gotoView('calendars');
@@ -175,22 +175,48 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
         });
     }
 
-    function myCPSettings(eventBlock, registry) {
+    function myCPView(registry, eventBlock, xhr) {
         var calendar = aps.context.vars.calendar,
             data = meta.wizard();
-        if (data)
-            meta.showMsg.apply(this, data);
         layout[2][0][2][0][1].value = calendar.name;
         layout[2][0][2][1][1].value = calendar.description;
-        layout[2][0][2][2][1].value = calendar.timezone;
+        layout[2][0][2][2][1].value = meta.timezoneInfo(calendar.timezone, dt);
         layout[2].push(eventBlock({
-            calendarId: calendar.aps.id,
-            showControls: true
+            dateTime: dt,
+            storeTarget: '/aps/2/resources/' + calendar.aps.id + '/listEvents',
+            showControls: true,
+            overrideMasterDetail: true
         }));
         load(layout).then(function() {
+            if (data)
+                meta.showMsg.apply(this, data);
             registry.byId('btn-schedule').on('click', function() {
                 aps.apsc.gotoView('event.new0');
-            })
+            });
+            registry.byId('btn-cancel').on('click', function() {
+                if (!confirm('Are you sure that you want to cancel all selected events (notifications will be sent to attendees)?')) {
+                    this.cancel();
+                    return;
+                }
+                aps.apsc.showLoading();
+                var button = this,
+                    grid = registry.byId('gr-events'),
+                    selectionArray = grid.get('selectionArray'),
+                    count = selectionArray.length;
+                selectionArray.forEach(function(v) {
+                    xhr.post('/aps/2/resources/' + calendar.aps.id + '/cancelEvent', {
+                        data: v
+                    }).then(function() {
+                        selectionArray.splice(selectionArray.indexOf(v), 1);
+                        grid.refresh();
+                    }, meta.showMsg).always(function() {
+                        if (--count === 0) {
+                            aps.apsc.hideLoading();
+                            button.cancel();
+                        }
+                    });
+                });
+            });
         });
     }
 });

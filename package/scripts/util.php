@@ -3,7 +3,7 @@
 require_once 'aps/2/runtime.php';
 require_once 'api-client/autoload.php';
 
-define('APS_DEVELOPMENT_MODE', 'on');
+define('APS_DEVELOPMENT_MODE', 'on'); //dev mode
 
 function getService($globals) {
 	$l = \APS\Logger::get();
@@ -30,7 +30,7 @@ function removeOldEvents($globals) {
 	foreach ($globals->contexts as $v) {
 		foreach ($v->calendars as $v1) {
 			foreach ($v1->events as $v2) {
-				$s->events->delete($v1->googleId, $v2->googleId, false);
+				$s->events->delete($v1->googleId, $v2->googleId, array('sendNotifications' => false));
 				$c->unregisterResource($v2);
 			}
 		}

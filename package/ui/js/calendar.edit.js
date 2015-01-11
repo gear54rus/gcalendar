@@ -1,4 +1,4 @@
-require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, moment, tzList, getStateful, at, getPlainValue, load, registry) {
+require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, tzList, getStateful, at, getPlainValue, load, registry) {
     if (!meta.check({
             'suwizard.new': [
                 ['dojo/text!./js/modelCalendar.json'],
@@ -14,7 +14,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
             ]
         }))
         return;
-    var dt = moment.utc(),
+    var dt = meta.dt,
         layout = ['aps/PageContainer', {
                 id: 'page-container'
             },
@@ -43,7 +43,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                             label: 'Timezone',
                             options: JSON.parse(tzList).map(function(v) {
                                 return {
-                                    label: v + dt.clone().tz(v).format(' (UTCZ, ' + meta.timeFormat + ')'),
+                                    label: meta.timezoneInfo(v, dt),
                                     value: v
                                 };
                             })
@@ -52,7 +52,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                 ]
             ]
         ];
-    meta.run();
+    return meta.run();
 
     function suwizardNew(modelCalendar) {
         var model = getStateful(JSON.parse(modelCalendar));
@@ -125,7 +125,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                             return {
                                 label: meta.userInfo(v),
                                 value: v.aps.id
-                            }
+                            };
                         }),
                         required: true
                     }]
@@ -199,7 +199,7 @@ require(['js/meta.js', 'js/lib/moment.js', 'dojo/text!./js/timezoneList.json', '
                         target: '/aps/2/resources'
                     })).put(getPlainValue(model)).then(function() {
                         meta.wizard(['Calendar was successfully updated!', 'info', true]);
-                        aps.apsc.gotoView('calendar.view');
+                        aps.apsc.gotoView('calendar.view', target.aps.id);
                     });
                 };
                 aps.app.onCancel = function() {

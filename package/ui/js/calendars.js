@@ -1,5 +1,4 @@
-require(['js/meta.js', 'aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/registry', 'aps/load', 'aps/ready!'], function(meta, Store, StatefulArray, registry, load) {
-    var selectionArray = new StatefulArray();
+require(['js/meta.js', 'aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], function(meta, Store, registry, load) {
     load(['aps/PageContainer', {
             id: 'page-container'
         },
@@ -17,7 +16,10 @@ require(['js/meta.js', 'aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/re
                         type: 'resourceName'
                     }, {
                         field: 'timezone',
-                        name: 'Timezone'
+                        name: 'Timezone',
+                        renderCell: function(item, value) {
+                            return meta.timezoneInfo(value, meta.dt);
+                        }
                     }]
                 },
                 [
@@ -62,7 +64,7 @@ require(['js/meta.js', 'aps/ResourceStore', 'dojox/mvc/StatefulArray', 'dijit/re
                 store.remove(v).then(function() {
                     selectionArray.splice(selectionArray.indexOf(v), 1);
                     grid.refresh();
-                }, meta.showMsg).always(function () {
+                }, meta.showMsg).always(function() {
                     if (--count === 0) {
                         aps.apsc.hideLoading();
                         button.cancel();

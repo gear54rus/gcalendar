@@ -64,12 +64,12 @@ class globals extends \APS\ResourceBase {
     }
 
     private function clearAccount() {
-        $s = getService($this);
+        $service = getService($this);
         $l = \APS\Logger::get();
-        $calendarList = $s->calendarList->listCalendarList(array('maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id'));
+        $calendarList = $service->calendarList->listCalendarList(array('maxResults' => 250, 'minAccessRole' => 'owner', 'showHidden' => true, 'showDeleted' => true, 'fields' => 'items/id'));
         foreach ($calendarList->getItems() as $v) {
             $l->debug('Deleting '.$v->getId());
-            $s->calendars->delete($v->getId());            
+            $service->calendars->delete($v->getId());            
         }
     }
 }
