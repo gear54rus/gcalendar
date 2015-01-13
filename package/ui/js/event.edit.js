@@ -59,12 +59,8 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                         ['aps/Select', {
                             id: 'sel-timezone',
                             label: 'Timezone',
-                            options: JSON.parse(tzList).map(function(v) {
-                                return {
-                                    label: meta.timezoneInfo(v, dt),
-                                    value: v
-                                };
-                            })
+                            options: meta.timezoneListOptions(tzList, dt),
+                            required: true
                         }]
                     ]
                 ],
@@ -76,14 +72,16 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                         ['aps/TextArea', {
                             id: 'tb-attendees',
                             label: 'Attendees',
-                            placeholder: 'Attendees\' emails, separated by comma',
+                            placeholder: 'Emails separated by comma',
+                            hint: 'Invitations will be sent to these emails as well as yours. If any of them are on Gmail, they will also be able to use reminders',
                             cols: 40,
                             rows: 5
                         }],
                         ['aps/TextBox', {
                             id: 'tb-reminders',
                             label: 'Reminders',
-                            placeholder: 'Minutes before event start, separated by comma',
+                            placeholder: 'Numbers separated by comma',
+                            hint: 'Reminder emails will be sent that many minutes before the event start',
                             size: 40
                         }]
                     ]
@@ -104,8 +102,9 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
         }]);
         if (!data) {
             model.timezone = aps.context.vars.calendar.timezone;
-            model.start = dt.clone().add(30, 'm').tz(model.timezone).format(gTimeFormat);
-            model.end = dt.clone().add(60, 'm').tz(model.timezone).format(gTimeFormat);
+            var eventDt = dt.clone().tz(model.timezone).seconds(0).milliseconds(0);
+            model.start = eventDt.add(30, 'm').format(gTimeFormat);
+            model.end = eventDt.add(30, 'm').format(gTimeFormat);
             data = {};
             data.model = model;
         }
@@ -114,10 +113,10 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
         layout[2][1][2][2][1].value = at(model, 'location');
         var timeTransform = {
             format: function(v) {
-                return m(v).format(meta.timeFormat);
+                return m(v, gTimeFormat).format(meta.timeFormat);
             },
             parse: function(v) {
-                v = m(v);
+                v = m(v, meta.timeFormat);
                 return v.isValid() ? v.format(gTimeFormat) : '';
             }
         };

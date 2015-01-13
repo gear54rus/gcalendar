@@ -1,4 +1,4 @@
-require(['js/meta.js', 'aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/ready!'], function(meta, Store, registry, load) {
+require(['js/meta.js', 'aps/ResourceStore', 'dijit/registry', 'aps/load'], function(meta, Store, registry, load) {
     load(['aps/PageContainer', {
             id: 'page-container'
         },
@@ -13,12 +13,18 @@ require(['js/meta.js', 'aps/ResourceStore', 'dijit/registry', 'aps/load', 'aps/r
                     columns: [{
                         field: 'name',
                         name: 'Name',
-                        type: 'resourceName'
+                        type: 'resourceName',
+                        filter: {
+                            title: 'Name'
+                        }
                     }, {
                         field: 'timezone',
                         name: 'Timezone',
                         renderCell: function(item, value) {
                             return meta.timezoneInfo(value, meta.dt);
+                        },
+                        filter: {
+                            title: 'Timezone'
                         }
                     }]
                 },

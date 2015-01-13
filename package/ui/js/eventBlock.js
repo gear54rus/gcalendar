@@ -24,7 +24,10 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
                         columns: [{
                             field: 'summary',
                             name: 'Summary',
-                            type: 'resourceName'
+                            type: 'resourceName',
+                            filter: {
+                                title: 'Summary'
+                            }
                         }, {
                             field: 'location',
                             name: 'Location'
@@ -51,9 +54,9 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
         if (parameters.overrideMasterDetail) {
             delete layout[2][0][1].apsResourceViewId;
             delete layout[2][0][1].columns[0].type;
-            window.gcalendarWizard = meta.wizard;
+            window.gCalendarWizard = meta.wizard;
             layout[2][0][1].columns[0].renderCell = function(item) {
-                return '<a href="javascript:gcalendarWizard({id: \'' + item.aps.id + '\'}); aps.apsc.gotoView(\'mycp.event.view\');">' + item.summary + '</a>';
+                return '<a href="javascript:gCalendarWizard({id: \'' + item.aps.id + '\'}); aps.apsc.gotoView(\'mycp.event.view\');">' + item.summary + '</a>';
             };
         }
         if (parameters.showControls)

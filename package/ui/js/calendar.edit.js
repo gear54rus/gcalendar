@@ -9,7 +9,7 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                 calendarNew
             ],
             'calendar.edit': [
-                ['aps/ResourceStore'],
+                ['aps/xhr'],
                 calendarEdit
             ]
         }))
@@ -41,12 +41,8 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                         ['aps/Select', {
                             id: 'sel-timezone',
                             label: 'Timezone',
-                            options: JSON.parse(tzList).map(function(v) {
-                                return {
-                                    label: meta.timezoneInfo(v, dt),
-                                    value: v
-                                };
-                            })
+                            options: meta.timezoneListOptions(tzList, dt),
+                            required: true
                         }]
                     ]
                 ]
@@ -57,7 +53,7 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
     function suwizardNew(modelCalendar) {
         var model = getStateful(JSON.parse(modelCalendar));
         model.name = aps.context.params.user.displayName + '\'s calendar';
-        model.timezone = layout[2][0][2][2][1].options[0].value;
+        model.timezone = aps.context.vars.context.defaultTimezone;
         layout[2][0][2][0][1].value = at(model, 'name');
         layout[2][0][2][1][1].value = at(model, 'description');
         layout[2][0][2][2][1].value = at(model, 'timezone');
@@ -165,7 +161,7 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
         });
     }
 
-    function calendarEdit(Store) {
+    function calendarEdit(xhr) {
         var target;
         meta.getFull(aps.context.vars.target).then(function(resource) {
             target = resource;
@@ -195,9 +191,9 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                         aps.apsc.cancelProcessing();
                         return;
                     }
-                    (new Store({
-                        target: '/aps/2/resources'
-                    })).put(getPlainValue(model)).then(function() {
+                    xhr.put('/aps/2/resources' + model.aps.id, {
+                        data: JSON.stringify(getPlainValue(context))
+                    }).then(function() {
                         meta.wizard(['Calendar was successfully updated!', 'info', true]);
                         aps.apsc.gotoView('calendar.view', target.aps.id);
                     });

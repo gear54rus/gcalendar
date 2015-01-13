@@ -58,7 +58,7 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                         }],
                         ['aps/Output', {
                             id: 'ou-status',
-                            label: 'Status'
+                            label: 'Status (local time)'
                         }]
                     ]
                 ],

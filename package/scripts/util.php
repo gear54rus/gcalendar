@@ -11,7 +11,7 @@ function getService($globals) {
 	if ($service !== null)
 		return $service;
 	$client = new Google_Client();
-	$client->setApplicationName("Client_Library_Examples");
+	$client->setApplicationName('GCalendar APS package');
 	$service = new Google_Service_Calendar($client);
 	$creds = new Google_Auth_AssertionCredentials($globals->serviceAccountName, array('https://www.googleapis.com/auth/calendar'), base64_decode(file_get_contents($globals->serviceAccountName)));
 	$client->setAssertionCredentials($creds);
@@ -30,11 +30,14 @@ function removeOldEvents($globals) {
 	foreach ($globals->contexts as $v) {
 		foreach ($v->calendars as $v1) {
 			foreach ($v1->events as $v2) {
-				$s->events->delete($v1->googleId, $v2->googleId, array('sendNotifications' => false));
-				$c->unregisterResource($v2);
+				if ($v->eventTTL) {
+					$s->events->delete($v1->googleId, $v2->googleId, array('sendNotifications' => false));
+					$c->unregisterResource($v2);
+				}
 			}
 		}
 	}
 }
 
-\APS\Logger::get()->setLogFile("log");
+if (!(array_key_exists('PROJECTS', $_SERVER) && (strpos($_SERVER['PROJECTS'], ' build ') === 0)))
+	\APS\Logger::get()->setLogFile('log');

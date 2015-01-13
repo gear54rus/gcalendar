@@ -49,8 +49,16 @@ define(['js/lib/moment.js', 'dijit/registry', 'aps/Message', 'aps/PageContainer'
     meta.timezoneInfo = function(timezone, dateTime) {
         return timezone + ' ' + (dateTime ? dateTime.clone() : moment).tz(timezone).format(meta.timeInZoneFormat);
     };
+    meta.timezoneListOptions = function(tzList, dateTime) {
+        return JSON.parse(tzList).map(function(v) {
+            return {
+                label: meta.timezoneInfo(v, dateTime),
+                value: v
+            };
+        });
+    };
     meta.eventStatus = function(dateTime, start, end, timezone) {
-        start = moment.tz(start, timezone),
+        start = moment.tz(start, timezone);
         end = moment.tz(end, timezone);
         if (start.isAfter(dateTime))
             return 'Starts ' + start.from(dateTime);

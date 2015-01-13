@@ -41,15 +41,15 @@ class context extends \APS\ResourceBase {
     }
 
     public function provision() {
-
+        \APS\Logger::get()->debug('Provisioning context');
     }   
 
     public function configure($new) {
-
+        \APS\Logger::get()->debug('Configuring context');
     }
 
     public function unprovision() {
-
+        \APS\Logger::get()->debug('Unprovisioning context');
     }
 
     /**
