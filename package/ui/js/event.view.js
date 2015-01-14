@@ -1,86 +1,4 @@
 require(['js/meta.js', 'aps/load'], function(meta, load) {
-    if (!meta.check({
-            'event.new1': [
-                ['dojo/text!./js/newEventWizard.json', 'aps/xhr'],
-                eventNew
-            ],
-            'event.view': [
-                ['aps/xhr'],
-                eventView
-            ],
-            'mycp.event.view': [
-                ['aps/xhr'],
-                myCPEventView
-            ]
-        }))
-        return;
-    var m = meta.moment,
-        dt = meta.dt,
-        layout = ['aps/PageContainer', {
-                id: 'page-container'
-            },
-            [
-                ['aps/FieldSet', {
-                        id: 'fs-general',
-                        title: 'General information'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-summary',
-                            label: 'Summary'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-description',
-                            label: 'Description'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-location',
-                            label: 'Location'
-                        }]
-                    ]
-                ],
-                ['aps/FieldSet', {
-                        id: 'fs-timings',
-                        title: 'Timings'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-start',
-                            label: 'Start time'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-end',
-                            label: 'End time'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-timezone',
-                            label: 'Timezone'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-status',
-                            label: 'Status (local time)'
-                        }]
-                    ]
-                ],
-                ['aps/FieldSet', {
-                        id: 'fs-other',
-                        title: 'People and reminders'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-attendees',
-                            label: 'Attendees'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-reminders',
-                            label: 'Reminders'
-                        }]
-                    ]
-                ]
-            ]
-        ];
-    return meta.run();
-
     function eventNew(newEventWizard, xhr) {
         var data = meta.wizard();
         if (!data) {
@@ -198,7 +116,7 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                         xhr.post('/aps/2/resources/' + aps.context.vars.calendar.aps.id + '/cancelEvent', {
                             data: data.id
                         }).then(function() {
-                            meta.wizard(['Event "' + event.summary + '" was successfully canceled!', 'info', true]);
+                            meta.wizard(['Event \'' + event.summary + '\' was successfully canceled!', 'info', true]);
                             aps.apsc.gotoView('mycp.view');
                         }, meta.showMsg);
                     }
@@ -206,4 +124,85 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             });
         });
     }
+    if (!meta.check({
+            'event.new1': [
+                ['dojo/text!./js/newEventWizard.json', 'aps/xhr'],
+                eventNew
+            ],
+            'event.view': [
+                ['aps/xhr'],
+                eventView
+            ],
+            'mycp.event.view': [
+                ['aps/xhr'],
+                myCPEventView
+            ]
+        }))
+        return;
+    var m = meta.moment,
+        dt = meta.dt,
+        layout = ['aps/PageContainer', {
+                id: 'page-container'
+            },
+            [
+                ['aps/FieldSet', {
+                        id: 'fs-general',
+                        title: 'General information'
+                    },
+                    [
+                        ['aps/Output', {
+                            id: 'ou-summary',
+                            label: 'Summary'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-description',
+                            label: 'Description'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-location',
+                            label: 'Location'
+                        }]
+                    ]
+                ],
+                ['aps/FieldSet', {
+                        id: 'fs-timings',
+                        title: 'Timings'
+                    },
+                    [
+                        ['aps/Output', {
+                            id: 'ou-start',
+                            label: 'Start time'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-end',
+                            label: 'End time'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-timezone',
+                            label: 'Timezone'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-status',
+                            label: 'Status (local time)'
+                        }]
+                    ]
+                ],
+                ['aps/FieldSet', {
+                        id: 'fs-other',
+                        title: 'People and reminders'
+                    },
+                    [
+                        ['aps/Output', {
+                            id: 'ou-attendees',
+                            label: 'Attendees'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-reminders',
+                            label: 'Reminders'
+                        }]
+                    ]
+                ]
+            ]
+        ];
+    return meta.run();
 });

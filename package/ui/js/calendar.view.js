@@ -1,55 +1,4 @@
 require(['js/meta.js', 'aps/load'], function(meta, load) {
-    if (!meta.check({
-            'suwizard.overview': [
-                [],
-                suwizardOverview
-            ],
-            'suservice.view': [
-                ['aps/ResourceStore', 'js/eventBlock.js'],
-                suserviceView
-            ],
-            'calendar.view': [
-                ['aps/ResourceStore', 'js/eventBlock.js'],
-                calendarView
-            ],
-            'calendar.new1': [
-                ['dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore'],
-                calendarNew
-            ],
-            'mycp.view': [
-                ['dijit/registry', 'js/eventBlock.js', 'aps/xhr'],
-                myCPView
-            ]
-        }))
-        return;
-    var dt = meta.dt,
-        layout = ['aps/PageContainer', {
-                id: 'page-container'
-            },
-            [
-                ['aps/FieldSet', {
-                        id: 'fs-params',
-                        title: 'Calendar parameters'
-                    },
-                    [
-                        ['aps/Output', {
-                            id: 'ou-name',
-                            label: 'Name'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-description',
-                            label: 'Description'
-                        }],
-                        ['aps/Output', {
-                            id: 'ou-timezone',
-                            label: 'Timezone'
-                        }]
-                    ]
-                ]
-            ]
-        ];
-    return meta.run();
-
     function suwizardOverview() {
         var calendar = aps.context.params.objects[0];
         layout[2][0][2][0][1].value = calendar.name;
@@ -74,7 +23,8 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             layout[2][0][2][1][1].value = calendar.description;
             layout[2][0][2][2][1].value = meta.timezoneInfo(calendar.timezone, dt);
             layout[2].push(eventBlock({
-                calendarId: calendar.aps.id
+                calendarId: calendar.aps.id,
+                hideControls: true
             }));
             load(layout);
         });
@@ -99,7 +49,8 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                 ]
             ]);
             layout[2].push(eventBlock({
-                calendarId: calendar.aps.id
+                calendarId: calendar.aps.id,
+                hideControls: true
             }));
             layout[2][1][2][0][1].value = calendar.name;
             layout[2][1][2][1][1].value = calendar.description;
@@ -113,9 +64,11 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
                         (new Store({
                             target: '/aps/2/resources'
                         })).remove(calendar.aps.id).then(function() {
-                            meta.wizard(['Calendar "' + calendar.name + '" was successfully deleted!', 'info', true]);
+                            meta.wizard(['Calendar \'' + calendar.name + '\' was successfully deleted!', 'info', true]);
                             aps.apsc.gotoView('calendars');
                         }, meta.showMsg);
+                    } else {
+                        aps.apsc.cancelProcessing();
                     }
                 };
                 aps.app.onPrev = function() {
@@ -184,7 +137,7 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
         layout[2].push(eventBlock({
             dateTime: dt,
             storeTarget: '/aps/2/resources/' + calendar.aps.id + '/listEvents',
-            showControls: true,
+            hideFilters: true,
             overrideMasterDetail: true
         }));
         load(layout).then(function() {
@@ -219,4 +172,55 @@ require(['js/meta.js', 'aps/load'], function(meta, load) {
             });
         });
     }
+
+    if (!meta.check({
+            'suwizard.overview': [
+                [],
+                suwizardOverview
+            ],
+            'suservice.view': [
+                ['aps/ResourceStore', 'js/eventBlock.js'],
+                suserviceView
+            ],
+            'calendar.view': [
+                ['aps/ResourceStore', 'js/eventBlock.js'],
+                calendarView
+            ],
+            'calendar.new1': [
+                ['dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore'],
+                calendarNew
+            ],
+            'mycp.view': [
+                ['dijit/registry', 'js/eventBlock.js', 'aps/xhr'],
+                myCPView
+            ]
+        }))
+        return;
+    var dt = meta.dt,
+        layout = ['aps/PageContainer', {
+                id: 'page-container'
+            },
+            [
+                ['aps/FieldSet', {
+                        id: 'fs-params',
+                        title: 'Calendar parameters'
+                    },
+                    [
+                        ['aps/Output', {
+                            id: 'ou-name',
+                            label: 'Name'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-description',
+                            label: 'Description'
+                        }],
+                        ['aps/Output', {
+                            id: 'ou-timezone',
+                            label: 'Timezone'
+                        }]
+                    ]
+                ]
+            ]
+        ];
+    return meta.run();
 });

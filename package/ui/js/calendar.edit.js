@@ -1,55 +1,4 @@
 require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, tzList, getStateful, at, getPlainValue, load, registry) {
-    if (!meta.check({
-            'suwizard.new': [
-                ['dojo/text!./js/modelCalendar.json'],
-                suwizardNew
-            ],
-            'calendar.new0': [
-                ['dojo/text!./js/modelCalendar.json', 'dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore', 'dojo/promise/all'],
-                calendarNew
-            ],
-            'calendar.edit': [
-                ['aps/xhr'],
-                calendarEdit
-            ]
-        }))
-        return;
-    var dt = meta.dt,
-        layout = ['aps/PageContainer', {
-                id: 'page-container'
-            },
-            [
-                ['aps/FieldSet', {
-                        id: 'fs-params',
-                        title: 'Calendar parameters'
-                    },
-                    [
-                        ['aps/TextBox', {
-                            id: 'tb-name',
-                            label: 'Name',
-                            placeholder: 'Name the calendar',
-                            size: 40,
-                            required: true
-                        }],
-                        ['aps/TextArea', {
-                            id: 'ta-description',
-                            label: 'Description',
-                            placeholder: 'Describe the calendar',
-                            cols: 56,
-                            rows: 10
-                        }],
-                        ['aps/Select', {
-                            id: 'sel-timezone',
-                            label: 'Timezone',
-                            options: meta.timezoneListOptions(tzList, dt),
-                            required: true
-                        }]
-                    ]
-                ]
-            ]
-        ];
-    return meta.run();
-
     function suwizardNew(modelCalendar) {
         var model = getStateful(JSON.parse(modelCalendar));
         model.name = aps.context.params.user.displayName + '\'s calendar';
@@ -191,8 +140,8 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
                         aps.apsc.cancelProcessing();
                         return;
                     }
-                    xhr.put('/aps/2/resources' + model.aps.id, {
-                        data: JSON.stringify(getPlainValue(context))
+                    xhr.put('/aps/2/resources/' + model.aps.id, {
+                        data: JSON.stringify(getPlainValue(model))
                     }).then(function() {
                         meta.wizard(['Calendar was successfully updated!', 'info', true]);
                         aps.apsc.gotoView('calendar.view', target.aps.id);
@@ -204,4 +153,54 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
             });
         });
     }
+    if (!meta.check({
+            'suwizard.new': [
+                ['dojo/text!./js/modelCalendar.json'],
+                suwizardNew
+            ],
+            'calendar.new0': [
+                ['dojo/text!./js/modelCalendar.json', 'dojo/text!./js/newCalendarWizard.json', 'aps/ResourceStore', 'dojo/promise/all'],
+                calendarNew
+            ],
+            'calendar.edit': [
+                ['aps/xhr'],
+                calendarEdit
+            ]
+        }))
+        return;
+    var dt = meta.dt,
+        layout = ['aps/PageContainer', {
+                id: 'page-container'
+            },
+            [
+                ['aps/FieldSet', {
+                        id: 'fs-params',
+                        title: 'Calendar parameters'
+                    },
+                    [
+                        ['aps/TextBox', {
+                            id: 'tb-name',
+                            label: 'Name',
+                            placeholder: 'Name the calendar',
+                            size: 40,
+                            required: true
+                        }],
+                        ['aps/TextArea', {
+                            id: 'ta-description',
+                            label: 'Description',
+                            placeholder: 'Describe the calendar',
+                            cols: 56,
+                            rows: 10
+                        }],
+                        ['aps/Select', {
+                            id: 'sel-timezone',
+                            label: 'Timezone',
+                            options: meta.timezoneListOptions(tzList, dt),
+                            required: true
+                        }]
+                    ]
+                ]
+            ]
+        ];
+    return meta.run();
 });

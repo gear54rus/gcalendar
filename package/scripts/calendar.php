@@ -130,11 +130,8 @@ class calendar extends \APS\ResourceBase {
     public function listEvents() {
         $l = \APS\Logger::get();
         $l->debug('Listing events');
-        $result = array();
-        foreach($this->events as $v) {
-            $result[] = \APS\Request::getController()->getResource($v->aps->id);
-        }
-        return $result;
+        $apsc = \APS\Request::getController();
+        return $apsc->getResources('', $apsc->getIo()->resourcePath().'/'.$this->aps->id.'/events');
     }
 
     /**

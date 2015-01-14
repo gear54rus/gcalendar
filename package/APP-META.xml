@@ -2,7 +2,7 @@
     <id>http://aps.google.com/gcalendar</id>
     <name>GCalendar</name>
     <version>1.0</version>
-    <release>0</release>
+    <release>1</release>
     <homepage>https://github.com/gear54rus/gcalendar</homepage>
     <vendor>
         <name>Google</name>
@@ -10,18 +10,21 @@
         <icon path="images/google.png" />
     </vendor>
     <packager>
-        <name>APS Team</name>
+        <name>APS support</name>
         <homepage>http://dev.apsstandard.org/</homepage>
         <icon path="images/apsteam.png" />
         <uri>http://dev.apsstandard.org/</uri>
     </packager>
     <presentation>
         <summary>GCalendar</summary>
-        <description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they have scheduled.</description>
+        <description>This app is a wrapper aroung Google's calendar API. It allows users to create calendars and invite other users to participate in the events they have scheduled. Event organizers can choose to set reminders for the events. Scheduled events will appear on attendees' Google calendars.</description>
         <icon path="images/icon.png" />
+        <screenshot path="images/screenshot.png">
+            <description>Scheduled event view</description>
+        </screenshot>
         <changelog>
-            <version release="0" version="1.0">
-                <entry>First release</entry>
+            <version release="1" version="1.0">
+                <entry>First release. Basic functionality is implemented.</entry>
             </version>
         </changelog>
         <categories>
@@ -58,6 +61,12 @@
                     <controls>
                         <cancel />
                         <submit label="Save" />
+                    </controls>
+                </view>
+                <view id="event.view" label="{target.summary} overview">
+                    <var name="target" type-id="http://aps.google.com/gcalendar/event/1.0" />
+                    <controls>
+                        <prev label="Back" />
                     </controls>
                 </view>
             </item>
@@ -128,6 +137,7 @@
             <name>Global settings</name>
             <summary>Global settings for GCalendar</summary>
             <infolinks>
+                <link class="deployment-guide" href="file:///doc/Resource Model.pptx">Resource Model</link>
                 <link class="deployment-guide" href="file:///doc/Deployment Guide.html">Deployment Guide</link>
                 <link class="support" href="http://dev.apsstandard.org/develop/rt/tickets/new/">APS Developer Support</link>
             </infolinks>

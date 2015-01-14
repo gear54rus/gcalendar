@@ -1,24 +1,80 @@
-<html>
-<head>
-</head>
-<body>
-* * * * * cd /var/www/html/gc && /usr/bin/php cron.php
-<input id="key" type="file"></input>
-<br/>
-<textarea id="b64">
-</textarea>
-<script>
-var reader = new FileReader();
-key.onchange = function () {
-	if (key.files[0].name.slice(-4) === '.p12')
-		reader.readAsDataURL(this.files[0]);
-	else
-		b64.value = 'Select the .p12 file'
-}
-
-reader.onload = function () {
-	b64.value = reader.result.slice(37);
-}
-</script>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>GCalendar Deployment Guide</title>
+        <link href="data:image/png;base64,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" rel="icon" type="image/x-icon" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <style>
+            body {
+            padding-top: 60px;
+            padding-bottom: 100px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="https://github.com/gear54rus/gcalendar" title="GCalendar home page"><span class="glyphicon glyphicon-calendar"></span> GCalendar</a>
+            </div>
+        </nav>
+        <div id="body" class="container">
+            <h1>Deployment Guide</h1>
+            This guide contains information on how to set up GCalendar 1.0 application on your <abbr title="Parallels Operations Automation">POA</abbr> environment. You can <a href="">download the package here</a>. GCalendar v1.0-1 was tested on POA 5.5.9-1236.
+            <dl>
+                <dt>
+                    <h2>1. Get a Google account</h2>
+                </dt>
+                <dd>This APS application uses Google calendar as its backend so you will need to have access to the functional Google account to proceed. When you have logged in to your Google account, you are ready for next step.</dd>
+                <dt>
+                    <h2>2. Enable calendar API</h2>
+                </dt>
+                <dd>Go to <a href="https://console.developers.google.com/project">Google projects console</a> and create project. Choose arbitrary <code>Project Name</code> and <code>Project ID</code>. Click <code>Enable an API</code> (or go into <code>APIs & auth -> APIs</code> and find <code>Calendar API</code> there and enable it). You can disable other APIs, but make sure Calendar API is active before moving to next step.</dd>
+                <dt>
+                    <h2>3. Generate API key</h2>
+                </dt>
+                <dd>
+                    Go to <code>APIs & auth -> Credentials</code> and click <code>Create new Client ID</code>. Choose <code>Service account</code> and proceed. A <code>.p12</code> file download screen will be shown immediately. Save it somewhere. Select the saved key file in the below input:
+                    <form>
+                        <div class="form-group">
+                            <label for"key">.p12 key file</label>
+                            <input id="key" type="file"></input>        
+                        </div>
+                        <div class="form-group">
+                            <textarea id="b64" class="form-control"></textarea>
+                            <p class="help-block">Base64 representation of key file. Select everything and copy into buffer.</p>
+                        </div>
+                    </form>
+                    You will need its base64 representation later on. Also, back on Google Developer Console screen, you need to copy <code>Email address</code> value of your new key.
+                </dd>
+                <dt>
+                    <h2>4. Deploy package</h2>
+                </dt>
+                <dd>Import package into POA and setup an endpoint. <a href="http://doc.apsstandard.org/2.1/pa/deployment/#package-import">Instructions are available here</a>. In addition to performing those instrutions, you need to add an additional cron job on the endpoint server. You can use <code>crontab -e</code> from under <code>root</code> user to do that. Add the following line to crontab (<b>don't forget to change the path to the appropriate value</b>): <br/><code>* * * * * cd /path/to/endpoint/folder &#x26;&#x26; php cron.php &#x3E;/dev/null 2&#x3E;&#x26;1</code><br/>This is needed to enable automatic event archiving, if you skip this step, your system may eventually slow down due to large number of created events.</code></dd>
+                <dt>
+                    <h2>5. Create application instance</h2>
+                </dt>
+                <dd>In POA, go to <code>Applications</code> menu, select <code>GCalendar -> Instances</code>. Install the new instance, specifying <code>Application API end-point URI</code> (the one you created on step 4), <code>Service Account Name</code> (<code>Email address</code> from step 3) and <code>Private Key</code> (Base64 string from this page). After you click <code>Finish</code>, make sure that provisioning completed successfully in <code>Tasks</code> menu of POA.</dd>
+                <dt>
+                    <h2>6. Setup POA service template</h2>
+                </dt>
+                <dd>Back in GCalendar application screen, choose <code>Resource Types</code> tab and create four resource types: <code>Globals</code> (Application Service Reference), <code>Context</code> (Application Service, check <code>Automatically provision service</code> checkbox), <code>Calendar</code> (Application Service) and <code>Event</code> (Application Service). After all 4 were created, go to <code>Service Templates</code> menu in POA and create a new service template (make sure <code>Autoprovisioning</code> checkbox is checked on your new service template) that contains at least one of each resource type. Activate your newly created service template.</dd>
+                <dt>
+                    <h2>6. Setup POA service template</h2>
+                </dt>
+                <dd>As the last step, you can create a subscription based on your new service template. This will provision GCalendar context automatically and GCalendar is ready to use after.</dd>
+            </dl>
+        </div>
+        <script>
+            var reader = new FileReader();
+            key.onchange = function () {
+                if (key.files[0].name.slice(-4) === '.p12')
+                    reader.readAsDataURL(this.files[0]);
+                else
+                    b64.value = 'Select the .p12 file'
+            };            
+            reader.onload = function () {
+                b64.value = reader.result.slice(37);
+            };
+        </script>
+    </body>
 </html>

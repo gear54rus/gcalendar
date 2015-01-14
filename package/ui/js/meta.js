@@ -111,6 +111,6 @@ define(['js/lib/moment.js', 'dijit/registry', 'aps/Message', 'aps/PageContainer'
     meta.run = function() {
         return require.apply(this, mode);
     };
-    console.log(aps); //dev mode
+    //console.log(aps); //dev mode
     return meta;
 });

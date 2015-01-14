@@ -1,5 +1,8 @@
 define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
     return function(parameters) {
+        function renderTime(object, time) {
+            return meta.formatTime(time);
+        }
         var store;
         if (parameters.calendarId)
             store = new Store({
@@ -9,8 +12,7 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
             store = new Store({
                 target: parameters.storeTarget
             });
-        var m = meta.moment,
-            dt = parameters.dateTime ? parameters.dateTime : meta.dt,
+        var dt = parameters.dateTime ? parameters.dateTime : meta.dt,
             layout = ['aps/Container', {
                     id: 'fs-events',
                     title: 'Events on this calendar'
@@ -19,15 +21,10 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
                     ['aps/Grid', {
                         id: 'gr-events',
                         selectionMode: 'multiple',
-                        apsResourceViewId: 'event.view',
                         store: store,
                         columns: [{
                             field: 'summary',
-                            name: 'Summary',
-                            type: 'resourceName',
-                            filter: {
-                                title: 'Summary'
-                            }
+                            name: 'Summary'
                         }, {
                             field: 'location',
                             name: 'Location'
@@ -52,17 +49,18 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
                 ]
             ];
         if (parameters.overrideMasterDetail) {
-            delete layout[2][0][1].apsResourceViewId;
-            delete layout[2][0][1].columns[0].type;
             window.gCalendarWizard = meta.wizard;
             layout[2][0][1].columns[0].renderCell = function(item) {
                 return '<a href="javascript:gCalendarWizard({id: \'' + item.aps.id + '\'}); aps.apsc.gotoView(\'mycp.event.view\');">' + item.summary + '</a>';
             };
+        } else {
+            layout[2][0][1].apsResourceViewId = 'event.view';
+            layout[2][0][1].columns[0].type = 'resourceName';
         }
-        if (parameters.showControls)
+        if (!parameters.hideControls)
             layout[2][0].push([
                 ['aps/Toolbar', {
-                        class: 'sid-kapc'
+                        'class': 'sid-kapc'
                     },
                     [
                         ['aps/ToolbarButton', {
@@ -80,10 +78,24 @@ define(['js/meta.js', 'aps/ResourceStore'], function(meta, Store) {
                     ]
                 ]
             ]);
-        return layout;
-
-        function renderTime(object, time) {
-            return meta.formatTime(time);
+        if (!parameters.hideFilters) {
+            layout[2][0][1].columns[0].filter = {
+                title: 'Summary'
+            };
+            layout[2][0][1].columns[1].filter = {
+                title: 'Location'
+            };
+            layout[2][0][1].columns[2].filter = {
+                title: 'Start time'
+            };
+            layout[2][0][1].columns[3].filter = {
+                title: 'End time'
+            };
+            layout[2][0][1].columns[4].filter = {
+                title: 'Timezone'
+            };
         }
+        console.log(layout);
+        return layout;
     };
 });

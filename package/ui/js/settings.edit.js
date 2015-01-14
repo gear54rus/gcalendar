@@ -17,7 +17,7 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'aps/xhr', 'dojox/mvc
                                 return Math.abs(parseInt(v, 10));
                             }
                         }),
-                        validator: function (v) {
+                        validator: function(v) {
                             return !isNaN(parseInt(v, 10)) && isFinite(v);
                         },
                         placeholder: 'Number of minutes',

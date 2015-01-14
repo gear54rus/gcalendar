@@ -1,95 +1,4 @@
 require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStateful', 'dojox/mvc/at', 'dojox/mvc/getPlainValue', 'aps/load', 'dijit/registry'], function(meta, tzList, getStateful, at, getPlainValue, load, registry) {
-    if (!meta.check({
-            'event.new0': [
-                ['dojo/text!./js/modelEvent.json', 'dojo/text!./js/newEventWizard.json'],
-                eventNew
-            ]
-        }))
-        return;
-    var m = meta.moment,
-        dt = meta.dt,
-        layout = ['aps/PageContainer', {
-                id: 'page-container'
-            },
-            [
-                ['aps/FieldSet', {
-                        id: 'fs-general',
-                        title: 'General information'
-                    },
-                    [
-                        ['aps/TextBox', {
-                            id: 'tb-summary',
-                            label: 'Summary',
-                            placeholder: 'Title for the event',
-                            size: 40,
-                            required: true
-                        }],
-                        ['aps/TextArea', {
-                            id: 'ta-description',
-                            label: 'Description',
-                            placeholder: 'Describe the event',
-                            cols: 56,
-                            rows: 10
-                        }],
-                        ['aps/TextBox', {
-                            id: 'tb-location',
-                            label: 'Location',
-                            placeholder: 'Location of the event',
-                            size: 40
-                        }]
-                    ]
-                ],
-                ['aps/FieldSet', {
-                        id: 'fs-timings',
-                        title: 'Timings'
-                    },
-                    [
-                        ['aps/TextBox', {
-                            id: 'tb-start',
-                            label: 'Start time',
-                            placeholder: 'Event start date and time',
-                            required: true
-                        }],
-                        ['aps/TextBox', {
-                            id: 'tb-end',
-                            label: 'End time',
-                            placeholder: 'Event end date and time',
-                            required: true
-                        }],
-                        ['aps/Select', {
-                            id: 'sel-timezone',
-                            label: 'Timezone',
-                            options: meta.timezoneListOptions(tzList, dt),
-                            required: true
-                        }]
-                    ]
-                ],
-                ['aps/FieldSet', {
-                        id: 'fs-other',
-                        title: 'People and reminders'
-                    },
-                    [
-                        ['aps/TextArea', {
-                            id: 'tb-attendees',
-                            label: 'Attendees',
-                            placeholder: 'Emails separated by comma',
-                            hint: 'Invitations will be sent to these emails as well as yours. If any of them are on Gmail, they will also be able to use reminders',
-                            cols: 40,
-                            rows: 5
-                        }],
-                        ['aps/TextBox', {
-                            id: 'tb-reminders',
-                            label: 'Reminders',
-                            placeholder: 'Numbers separated by comma',
-                            hint: 'Reminder emails will be sent that many minutes before the event start',
-                            size: 40
-                        }]
-                    ]
-                ]
-            ]
-        ];
-    return meta.run();
-
     function eventNew(modelEvent, newEventWizard) {
         var data = meta.wizard(),
             model = getStateful(data ? data.model : JSON.parse(modelEvent)),
@@ -190,4 +99,95 @@ require(['js/meta.js', 'dojo/text!./js/timezoneList.json', 'dojox/mvc/getStatefu
             };
         });
     }
+
+    if (!meta.check({
+            'event.new0': [
+                ['dojo/text!./js/modelEvent.json', 'dojo/text!./js/newEventWizard.json'],
+                eventNew
+            ]
+        }))
+        return;
+    var m = meta.moment,
+        dt = meta.dt,
+        layout = ['aps/PageContainer', {
+                id: 'page-container'
+            },
+            [
+                ['aps/FieldSet', {
+                        id: 'fs-general',
+                        title: 'General information'
+                    },
+                    [
+                        ['aps/TextBox', {
+                            id: 'tb-summary',
+                            label: 'Summary',
+                            placeholder: 'Title for the event',
+                            size: 40,
+                            required: true
+                        }],
+                        ['aps/TextArea', {
+                            id: 'ta-description',
+                            label: 'Description',
+                            placeholder: 'Describe the event',
+                            cols: 56,
+                            rows: 10
+                        }],
+                        ['aps/TextBox', {
+                            id: 'tb-location',
+                            label: 'Location',
+                            placeholder: 'Location of the event',
+                            size: 40
+                        }]
+                    ]
+                ],
+                ['aps/FieldSet', {
+                        id: 'fs-timings',
+                        title: 'Timings'
+                    },
+                    [
+                        ['aps/TextBox', {
+                            id: 'tb-start',
+                            label: 'Start time',
+                            placeholder: 'Event start date and time',
+                            required: true
+                        }],
+                        ['aps/TextBox', {
+                            id: 'tb-end',
+                            label: 'End time',
+                            placeholder: 'Event end date and time',
+                            required: true
+                        }],
+                        ['aps/Select', {
+                            id: 'sel-timezone',
+                            label: 'Timezone',
+                            options: meta.timezoneListOptions(tzList, dt),
+                            required: true
+                        }]
+                    ]
+                ],
+                ['aps/FieldSet', {
+                        id: 'fs-other',
+                        title: 'People and reminders'
+                    },
+                    [
+                        ['aps/TextArea', {
+                            id: 'tb-attendees',
+                            label: 'Attendees',
+                            placeholder: 'Emails separated by comma',
+                            hint: 'Invitations will be sent to these emails as well as yours. If any of them are on Gmail, they will also be able to use reminders',
+                            cols: 40,
+                            rows: 5
+                        }],
+                        ['aps/TextBox', {
+                            id: 'tb-reminders',
+                            label: 'Reminders',
+                            placeholder: 'Numbers separated by comma',
+                            hint: 'Reminder emails will be sent that many minutes before the event start',
+                            size: 40
+                        }]
+                    ]
+                ]
+            ]
+        ];
+    return meta.run();
 });
