@@ -137,7 +137,7 @@
             <name>Global settings</name>
             <summary>Global settings for GCalendar</summary>
             <infolinks>
-                <link class="deployment-guide" href="file:///doc/Resource Model.pptx">Resource Model</link>
+                <link class="deployment-guide" href="file:///doc/Resource Model.png">Resource Model</link>
                 <link class="deployment-guide" href="file:///doc/Deployment Guide.html">Deployment Guide</link>
                 <link class="support" href="http://dev.apsstandard.org/develop/rt/tickets/new/">APS Developer Support</link>
             </infolinks>

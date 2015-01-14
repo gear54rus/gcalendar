@@ -19,7 +19,7 @@
         </nav>
         <div id="body" class="container">
             <h1>Deployment Guide</h1>
-            This guide contains information on how to set up GCalendar 1.0 application on your <abbr title="Parallels Operations Automation">POA</abbr> environment. You can <a href="">download the package here</a>. GCalendar v1.0-1 was tested on POA 5.5.9-1236.
+            This guide contains information on how to set up GCalendar 1.0 application on your <abbr title="Parallels Operations Automation">POA</abbr> environment. You can <a href="https://github.com/gear54rus/gcalendar/releases">download the package here</a>. GCalendar v1.0-1 was tested on POA 5.5.9-1236.
             <dl>
                 <dt>
                     <h2>1. Get a Google account</h2>
@@ -49,7 +49,7 @@
                 <dt>
                     <h2>4. Deploy package</h2>
                 </dt>
-                <dd>Import package into POA and setup an endpoint. <a href="http://doc.apsstandard.org/2.1/pa/deployment/#package-import">Instructions are available here</a>. In addition to performing those instrutions, you need to add an additional cron job on the endpoint server. You can use <code>crontab -e</code> from under <code>root</code> user to do that. Add the following line to crontab (<b>don't forget to change the path to the appropriate value</b>): <br/><code>* * * * * cd /path/to/endpoint/folder &#x26;&#x26; php cron.php &#x3E;/dev/null 2&#x3E;&#x26;1</code><br/>This is needed to enable automatic event archiving, if you skip this step, your system may eventually slow down due to large number of created events.</code></dd>
+                <dd>Import package into POA and setup an endpoint. <a href="http://doc.apsstandard.org/2.1/pa/deployment/#package-import">Instructions are available here</a>. In addition to performing those instrutions, you need to add an additional cron job on the endpoint server. You can use <code>crontab -e</code> from under <code>root</code> user to do that. Add the following line to crontab (<b>don't forget to change the path to the appropriate value</b>): <br/><code>* * * * * cd /path/to/endpoint/folder && php cron.php >/dev/null 2>&1</code><br/>This is needed to enable automatic event archiving, if you skip this step, your system may eventually slow down due to large number of created events.</code></dd>
                 <dt>
                     <h2>5. Create application instance</h2>
                 </dt>
